@@ -27,11 +27,15 @@ export class ApiService {
 
 
     get(pk) {
-        return this.pipeHttp(this.http.get(this.getUrl(pk)));
+        return this.pipeHttp(this.http.get(this.getUrlDetail(pk)));
     }
 
     create(data) {
-        return this.pipeHttp(this.http.post(this.postUrl(), data));
+        return this.pipeHttp(this.http.post(this.getUrlList(), data));
+    }
+
+    save(pk, data) {
+        return this.pipeHttp(this.http.put(this.getUrlDetail(pk), data));
     }
 
     pipeHttp(observable, listMode = false) {
@@ -50,11 +54,11 @@ export class ApiService {
         return new this.serializer(self, data);
     }
 
-    getUrl(pk) {
+    getUrlDetail(pk) {
         return `${this.url}${pk}/`;
     }
 
-    postUrl() {
+    getUrlList() {
         return `${this.url}`;
     }
 

@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 
 
+// TODO: remove
 export function InputConverter(converter?: (api, value: any) => any) {
     return (target: Object, key: string) => {
+        console.log(target);
         if (converter === undefined) {
             let metadata = (<any>Reflect).getMetadata("design:type", target, key);
             if (metadata === undefined || metadata === null)
@@ -45,14 +47,46 @@ export function InputConverter(converter?: (api, value: any) => any) {
 }
 
 
+export function Field(type?: any, required: boolean = true, defaultValue?: any,
+                      readOnly: boolean = false, writeOnly: boolean = false,
+                      helpText?: string) {
+    return (target: Object, key: string) => {
+        let metadata = (<any>Reflect).getMetadata("design:type", target, key);
+        if(!type) {
+            type = metadata;
+        }
+        if(target.constructor['fields'] === undefined) {
+            target.constructor['fields'] = {};
+        }
+        target.constructor['fields'][key] = {
+            type: type, required: required, defaultValue: defaultValue,
+            readOnly: readOnly, writeOnly: writeOnly, helpText: helpText,
+        };
+        console.log(target);
+    }
+}
+
+
 // @Injectable({
 //     providedIn: 'root'
 // })
 export class SerializerService {
-    api;
+    _api;
 
     constructor(api, data) {
-        this.api = api;
+        this._api = api;
         Object.assign(this, data);
+    }
+
+    getData() {
+        return Object.keys(this);
+    }
+
+    getPk() {
+        return this['id'];
+    }
+
+    save() {
+        return this._api.save(this.getPk(), this.getData());
     }
 }
