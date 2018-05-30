@@ -79,7 +79,18 @@ export class SerializerService {
     }
 
     getData() {
-        return Object.keys(this);
+        let newData = {};
+        Object.keys(this).forEach((key) => {
+            if(key.startsWith('_')) {
+                return;
+            }
+            let value = this[key];
+            if(value && value['getData']) {
+                value = value['getData']();
+            }
+            newData[key] = value;
+        });
+        return newData;
     }
 
     getPk() {

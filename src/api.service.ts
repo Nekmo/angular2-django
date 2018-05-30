@@ -47,11 +47,11 @@ export class ApiService {
     convert(data, listMode) {
         if(listMode) {
             let items = data['results'] || data;
-            items = new PagedList(items.map((item) => new this.serializer(self, item)));
+            items = new PagedList(items.map((item) => new this.serializer(this, item)));
             items.count = data['count'] || items.length;
             return items;
         }
-        return new this.serializer(self, data);
+        return new this.serializer(this, data);
     }
 
     getUrlDetail(pk) {
