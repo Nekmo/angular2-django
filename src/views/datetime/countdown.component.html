@@ -1,0 +1,6 @@
+<span matTooltip="{{ dt | date:'HH:mm dd/MM/yy' }}">
+    <span *ngIf="(dt | amDifference) > 0; else elseBlock">
+        Dentro de {{dt | amDifference | amDuration:'milliseconds'}}
+    </span>
+    <ng-template #elseBlock>Hace {{dt | amTimeAgo:true}}</ng-template>
+</span>
