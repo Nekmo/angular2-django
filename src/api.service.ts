@@ -23,7 +23,7 @@ export class ApiService {
     url: string;
     _queryParams = {};
 
-    constructor(private http: HttpClient) { }
+    constructor(public http: HttpClient) { }
 
 
     get(pk) {
