@@ -1,0 +1,17 @@
+.table-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-width: 300px;
+    overflow: auto;
+
+    .mat-table {
+        overflow: auto;
+
+        .cdk-column-id {
+            max-width: 64px;
+            justify-content: flex-end;
+            padding: 0 24px;
+        }
+
+    }
+}
