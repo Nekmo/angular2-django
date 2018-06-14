@@ -1,4 +1,4 @@
-# @angular/django
+# angular-django
 
 angular2-django is **Django Rest Framework API** for Angular 5+. Use the Django API in an easy way and as objects.
 
@@ -101,7 +101,7 @@ export class SnippetApi extends ApiService {
 To install this library, run:
 
 ```bash
-$ npm install @angular/django --save
+$ npm install angular-django --save
 ```
 
 ## Consuming your library
@@ -109,7 +109,7 @@ $ npm install @angular/django --save
 Once you have published your library to npm, you can import your library in any Angular application by running:
 
 ```bash
-$ npm install @angular/django
+$ npm install angular-django
 ```
 
 and then from your Angular `AppModule`:
@@ -121,7 +121,7 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 
 // Import your library
-import { SampleModule } from '@angular/django';
+import { SampleModule } from 'angular-django';
 
 @NgModule({
   declarations: [
