@@ -121,4 +121,19 @@ export class ApiService {
         api._queryParams = Object.assign({}, this._queryParams);
         return api;
     }
+
+    getLabel(name) {
+        if(!this._options) {
+            return
+        }
+        let data = this._options.actions.POST;
+        name.split('__').forEach((item, i, array) => {
+            data = data[item];
+            if(data['type'] == 'nested object' && i !== array.length - 1) {
+                data = data['children'];
+            }
+        });
+        return data['label'];
+    }
+
 }

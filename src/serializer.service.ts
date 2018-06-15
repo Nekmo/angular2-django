@@ -96,6 +96,17 @@ export class SerializerService {
         return this['id'];
     }
 
+    getValue(name) {
+        let value = this;
+        name.split('__').forEach((item) => {
+            value = value[item];
+            if(value['type'] == 'nested object') {
+                value = value['children'];
+            }
+        });
+        return value;
+    }
+
     save() {
         return this._api.save(this.getPk(), this.getData());
     }

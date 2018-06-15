@@ -1,24 +1,25 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {MatInput, MatPaginator, MatSort, MatSortable} from "@angular/material";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Options} from "../../api.service";
+import {isString} from "util";
 
 @Component({
   selector: 'django-table',
   templateUrl: './django-table.component.html',
   styleUrls: ['./django-table.component.scss']
 })
-export class DjangoTableComponent implements OnInit {
+export class DjangoTableComponent implements OnInit, OnChanges {
 
     routerPage: string;
     defaultPageIndex: number = 10;
     options: Options;
 
-    items: any[];
+    items: any[] = [];
     params = {};
     firstLoad = true;
     itemsLength: number = 0;
-    displayedColumns: string[];
+    displayedColumns: string[] = [];
 
     @Input() queryset: any;
     @Input() columns: any;
@@ -43,12 +44,27 @@ export class DjangoTableComponent implements OnInit {
         this.afterOnInit();
     }
 
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['columns']) {
+            this.setColumns();
+        }
+    }
+
     afterOnInit() {}
 
     setListeners() {
         this.paramsChangeListener();
         this.sortChangeListener();
         this.pageChangeListener();
+    }
+
+    setColumns() {
+        if(!this.columns) {
+            return;
+        }
+        this.displayedColumns = this.columns.map((item) => {
+            return this.getColumn(item);
+        });
     }
 
     // Listen sort change event
@@ -142,10 +158,26 @@ export class DjangoTableComponent implements OnInit {
         });
     }
 
+    getColumn(item) {
+        if(isString(item)) {
+            return item;
+        }
+        return item['column'];
+    }
+
     getLabel(name) {
+        if(!isString(name) && name['label']) {
+            return name['label'];
+        }
         if(!this.options) {
             return
         }
-        return this.options.actions.POST[name]['label'];
+        name = this.getColumn(name);
+        return this.queryset.getLabel(name);
+    }
+
+    getValue(row, name) {
+        name = this.getColumn(name);
+        return row.getValue(name);
     }
 }
