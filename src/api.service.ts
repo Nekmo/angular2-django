@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {SerializerService} from "./serializer.service";
 import {map} from "rxjs/operators";
+import {Observable} from "rxjs/Rx";
 
 
 
@@ -14,6 +15,18 @@ export class PagedList extends Array {
 }
 
 
+export class Options {
+
+    actions: {
+        POST: {},
+        description: string,
+        name: string,
+    };
+    parsers: string[];
+    renders: string[];
+}
+
+
 // @Injectable({
 //     providedIn: 'root'
 // })
@@ -22,8 +35,9 @@ export class ApiService {
     serializer: any;
     url: string;
     _queryParams = {};
+    _options: Options;
 
-    constructor(private http: HttpClient) { }
+    constructor(public http: HttpClient) { }
 
 
     get(pk) {
@@ -83,6 +97,19 @@ export class ApiService {
 
     setParams(params) {
         this._queryParams = Object.assign(this._queryParams, params);
+    }
+
+    options() {
+        return Observable.create((observer) => {
+            if(this._options) {
+                observer.next(this._options);
+            } else {
+                this.http.options(this.url).subscribe((options: Options) => {
+                    this._options = options;
+                    observer.next(options);
+                });
+            }
+        });
     }
 
     all() {

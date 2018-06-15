@@ -1,0 +1,37 @@
+
+
+<div class="container mt-5">
+    <div class="clearfix">
+        <!--
+        <mat-form-field class="float-right">
+          <input type="text" matInput placeholder="Buscar" #searchInput
+                 (keyup)="setParam('search', searchInput.value);">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+        -->
+    </div>
+
+
+    <div class="table-wrapper mat-elevation-z8 row">
+
+        <!--
+        matSortDirection="asc"
+        matSortActive="created"
+        -->
+        <mat-table [dataSource]="items" matSort matSortDisableClear>
+
+            <!-- ID Column -->
+            <ng-container matColumnDef="{{ column }}" *ngFor="let column of columns">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{ getLabel(column) }} </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{ row[column] }} </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row mat-row *matRowDef="let row; columns: displayedColumns;" routerLink="/{{ row.id }}"></mat-row>
+        </mat-table>
+
+        <mat-paginator [length]="itemsLength"
+                       [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+    </div>
+
+</div>

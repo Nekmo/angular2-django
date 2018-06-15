@@ -62,7 +62,6 @@ export function Field(type?: any, required: boolean = true, defaultValue?: any,
             type: type, required: required, defaultValue: defaultValue,
             readOnly: readOnly, writeOnly: writeOnly, helpText: helpText,
         };
-        console.log(target);
     }
 }
 
