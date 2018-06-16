@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {MatInput, MatPaginator, MatSort, MatSortable} from "@angular/material";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Options} from "../../api.service";
@@ -23,6 +23,7 @@ export class DjangoTableComponent implements OnInit, OnChanges {
 
     @Input() queryset: any;
     @Input() columns: any;
+    @Output() rowClick: EventEmitter<any> = new EventEmitter<any>();
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -179,5 +180,11 @@ export class DjangoTableComponent implements OnInit, OnChanges {
     getValue(row, name) {
         name = this.getColumn(name);
         return row.getValue(name);
+    }
+
+    onRowClick(row) {
+        if(this.rowClick) {
+            this.rowClick.emit(row);
+        }
     }
 }

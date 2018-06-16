@@ -122,7 +122,7 @@ export class ApiService {
         return api;
     }
 
-    getLabel(name) {
+    getOptionField(name) {
         if(!this._options) {
             return
         }
@@ -133,7 +133,15 @@ export class ApiService {
                 data = data['children'];
             }
         });
-        return data['label'];
+        return data;
+    }
+
+    getLabel(name) {
+        return (this.getOptionField(name) || {})['label'];
+    }
+
+    getHelpText(name) {
+        return (this.getOptionField(name) || {})['help_text'];
     }
 
 }

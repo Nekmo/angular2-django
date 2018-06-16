@@ -1,0 +1,72 @@
+<form fxLayout="column" fxLayoutAlign="start" (ngSubmit)="onFormSubmit()"
+      fxFlex="1 0 auto" name="form" [formGroup]="form" *ngIf="form">
+
+    <!-- fxLayout="row"  fxFlex="1 0 auto" -->
+    <div fxLayoutAlign="start start"  *ngFor="let row of schema">
+
+        <ng-container *ngFor="let input of row">
+            <h2 *ngIf="input['widget'] == 'title'">{{ input['text'] }}</h2>
+
+            <mat-form-field fxFlex="{{ input['flex'] }}" ngClass="{{ input['class'] }}"
+                            *ngIf="input['widget'] == 'input'">
+                <input matInput placeholder="{{ input['placeholder'] }}" type="{{ input['type'] }}"
+                       formControlName="{{ input['field'] }}">
+                <mat-error *ngIf="form.controls[input['field']].invalid">
+                    {{getErrorMessage(form.controls[input['field']]) }}
+                </mat-error>
+                <mat-hint *ngIf="input['help_text']">{{ input['help_text'] }}</mat-hint>
+            </mat-form-field>
+
+            <mat-form-field fxFlex="{{ input['flex'] }}" ngClass="{{ input['class'] }}"
+                            *ngIf="input['widget'] == 'textarea'">
+                <textarea matInput placeholder="{{ input['placeholder'] }}" mat-autosize
+                          formControlName="{{ input['field'] }}"></textarea>
+                <mat-error *ngIf="form.controls[input['field']].invalid">
+                    {{getErrorMessage(form.controls[input['field']])}}
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field fxFlex="{{ input['flex'] }}" ngClass="{{ input['class'] }}"
+                            *ngIf="input['widget'] == 'select'">
+                <mat-select placeholder="{{ input['placeholder'] }}"
+                            formControlName="{{ input['field'] }}">
+                    <mat-option *ngFor="let choice of (input['choices'] || [])" [value]="choice">
+                        {{ choice.name || choice.getName() }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="form.controls[input['field']].invalid">
+                    {{getErrorMessage(form.controls[input['field']])}}
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field fxFlex="{{ input['flex'] }}"  ngClass="{{ input['class'] }}"
+                            *ngIf="input['widget'] == 'datetime'">
+                <input matInput [matDatepicker]="picker" placeholder="{{ input['placeholder'] }}"
+                       formControlName="{{ input['field'] }}" />
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <mat-error *ngIf="form.controls[input['field']].invalid">
+                    {{getErrorMessage(form.controls[input['field']])}}
+                </mat-error>
+            </mat-form-field>
+
+            <div *ngIf="input['widget'] == 'checkbox'" fxFlex="{{ input['flex'] }}" class="mat-form-checkbox">
+                <mat-checkbox formControlName="{{ input['field'] }}" [indeterminate]="input['null']">
+                    {{ input['placeholder'] }}
+                </mat-checkbox>
+                <mat-error *ngIf="form.controls[input['field']].invalid">
+                    {{getErrorMessage(form.controls[input['field']])}}
+                </mat-error>
+            </div>
+        </ng-container>
+    </div>
+    <div class="pt-20">
+        <button mat-button mat-raised-button color="warn" class="mr-16" (click)="resetForm()">
+            {{ "Reset form" }}
+        </button>
+        <button mat-button mat-raised-button color="primary">
+            {{ "Save" }}
+        </button>
+    </div>
+
+</form>
