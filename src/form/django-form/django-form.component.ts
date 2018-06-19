@@ -77,7 +77,6 @@ export class DjangoFormComponent implements OnInit, OnChanges {
                     return field;
                 });
             });
-            console.log(controlsConfig);
 
             this.form = this.formBuilder.group(controlsConfig);
 
