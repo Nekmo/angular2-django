@@ -58,8 +58,10 @@ export function Field(type?: any, required: boolean = true, defaultValue?: any,
         if(target.constructor['fields'] === undefined) {
             target.constructor['fields'] = {};
         }
+        let isSerializer = type && type.prototype['__proto__'].constructor.name == 'SerializerService';
         target.constructor['fields'][key] = {
-            type: type, required: required, defaultValue: defaultValue,
+            typeName: (type ? type.name.toLowerCase() : ''), type: type, isSerializer: isSerializer,
+            required: required, defaultValue: defaultValue,
             readOnly: readOnly, writeOnly: writeOnly, helpText: helpText,
         };
     }
@@ -105,6 +107,29 @@ export class SerializerService {
             }
         });
         return value;
+    }
+
+    static getFieldOptions(field) {
+        if(field.indexOf('__') >= 0) {
+            let fields = field.split('__');
+            let nextFields = fields.splice(1);
+            let type_ = this.getNestedSerializer(fields[0]);
+            if(type_.prototype['__proto__'].constructor.name == 'SerializerService') {
+                return type_.getFieldOptions(nextFields.join('__'));
+            } else {
+                // TODO
+            }
+        }
+        let fields = (this.prototype.constructor['fields'] || {});
+        return (fields[field] || {})
+    }
+
+    static getNestedSerializer(field) {
+        // if(field.indexOf('__')) {
+        //     let fields = field.split('__');
+        //     let nextFields = fields.splice(1);
+        // }
+        return this.getFieldOptions(field)['type'];
     }
 
     save() {

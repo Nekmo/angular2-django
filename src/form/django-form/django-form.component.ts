@@ -3,9 +3,22 @@ import {FormBuilder, Validators, FormGroup} from "@angular/forms";
 import {isArray, isString} from "util";
 
 
-function getField (data, api){
+const TYPE_WIDGETS = {
+    "boolean": {"widget": "checkbox"},
+};
+
+
+function getField(data, api){
     if(isString(data)) {
         data = {"field": data};
+    }
+    if(data['widget'] === undefined) {
+        let options = api.serializer.getFieldOptions(data['field']);
+        let type = options['typeName'];
+        Object.assign(data, TYPE_WIDGETS[type] || {});
+        if(options['isSerializer']) {
+            data['widget'] = 'select';
+        }
     }
     if(data['required'] === undefined) {
         data['required'] = true;
