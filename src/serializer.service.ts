@@ -58,7 +58,8 @@ export function Field(type?: any, required: boolean = true, defaultValue?: any,
         if(target.constructor['fields'] === undefined) {
             target.constructor['fields'] = {};
         }
-        let isSerializer = type && type.prototype['__proto__'].constructor.name == 'SerializerService';
+        let isSerializer = (type && type.prototype['__proto__'] &&
+            type.prototype['__proto__'].constructor.name == 'SerializerService');
         target.constructor['fields'][key] = {
             typeName: (type ? type.name.toLowerCase() : ''), type: type, isSerializer: isSerializer,
             required: required, defaultValue: defaultValue,

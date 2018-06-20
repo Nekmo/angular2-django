@@ -89,6 +89,12 @@ export class ApiService {
         return item;
     }
 
+    filter(params) {
+        let item = this.copy();
+        item.setParams(params);
+        return item;
+    }
+
     page(page: number = 1, page_size: number = undefined) {
         let item = this.copy();
         item.setParams({'page': page, 'page_size': page_size});

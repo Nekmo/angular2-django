@@ -3,8 +3,15 @@ import {FormBuilder, Validators, FormGroup} from "@angular/forms";
 import {isArray, isString} from "util";
 
 
+
+export function _(str: string) {
+  return str;
+}
+
+
 const TYPE_WIDGETS = {
     "boolean": {"widget": "checkbox"},
+    "date": {"widget": "datetime"},
 };
 
 
@@ -94,6 +101,18 @@ export class DjangoFormComponent implements OnInit, OnChanges {
             this.form = this.formBuilder.group(controlsConfig);
 
         });
+    }
+
+    getErrorMessage(field) {
+        let err = field.hasError('required') ? _('You must enter a value') :
+            field.hasError('email') ? _('Not a valid email') :
+                '';
+        if(!err){
+            let errList = Object.keys(field.errors);
+            err = errList.join(', ');
+            console.log(err);
+        }
+        return err;
     }
 
     onFormSubmit() {}
