@@ -24,7 +24,9 @@ function getField(data, api){
         let type = options['typeName'];
         Object.assign(data, TYPE_WIDGETS[type] || {});
         if(options['isSerializer']) {
-            data['widget'] = 'select';
+            data['widget'] = 'search-input';
+            // TODO: obtener queryset de sub-serializer desde api. _api no está disponible en sub-serializer
+            data['queryset'] = data['queryset'] || null; // << TODO
         }
     }
     if(data['required'] === undefined) {
@@ -50,6 +52,7 @@ function getControlConfig(field, value = '') {
     data['disabled'] = field['disabled'] || false;
     data['value'] = field['default'] || '';
     data['value'] = value || field['default'];
+
     config.push(data);
     if(field['required']) {
         config.push(Validators.required);

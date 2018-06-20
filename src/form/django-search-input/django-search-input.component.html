@@ -1,0 +1,20 @@
+<mat-form-field fxFlex="100">
+    <!-- (blur)="onChange($event, input.value)" -->
+    <input matInput placeholder="{{ input['placeholder'] }}" type="{{ input['type'] }}" [matAutocomplete]="auto"
+            #searchInput (keyup)="searchWord(searchInput.value)" (focus)="searchClick();"
+            (blur)="focusOut()">
+    <button mat-button *ngIf="searchInput.value" matSuffix mat-icon-button aria-label="Clear"
+            (click)="clear()">
+      <mat-icon>close</mat-icon>
+    </button>
+    <mat-error *ngIf="form.controls[input['field']].invalid">
+        {{getErrorMessage(form.controls[input['field']]) }}
+    </mat-error>
+    <mat-hint *ngIf="input['help_text']">{{ input['help_text'] }}</mat-hint>
+</mat-form-field>
+<!-- #auto="matAutocomplete" -->
+<mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+    <mat-option *ngFor="let item of items" [value]="item">
+        {{ item.getName() }}
+    </mat-option>
+</mat-autocomplete>

@@ -15,7 +15,6 @@
                     {{getErrorMessage(form.controls[input['field']]) }}
                 </mat-error>
                 <mat-hint *ngIf="input['help_text']">{{ input['help_text'] }}</mat-hint>
-                <mat-hint>{{ input[''] }}</mat-hint>
             </mat-form-field>
 
             <mat-form-field fxFlex="{{ input['flex'] }}" ngClass="{{ input['class'] }}"
@@ -59,10 +58,14 @@
                     {{getErrorMessage(form.controls[input['field']])}}
                 </mat-error>
             </div>
+
+            <django-search-input *ngIf="input['widget'] == 'search-input'" [input]="input"
+                                 ngClass="{{ input['class'] }}" [queryset]="input['queryset']"
+                                 [form]="form" formControlName="{{ input['field'] }}"></django-search-input>
         </ng-container>
     </div>
     <div class="pt-20">
-        <button mat-button mat-raised-button color="warn" class="mr-16" (click)="resetForm()">
+        <button mat-button mat-raised-button color="warn" class="mr-16" (click)="resetForm()" type="button">
             {{ "Reset form" }}
         </button>
         <button mat-button mat-raised-button color="primary">
