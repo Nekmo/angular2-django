@@ -87,8 +87,8 @@ export class SerializerService {
             let type = options['type'];
             if(options['isSerializer']) {
                 data[name] = new type(this._api, data[name]);
-            } else {
-                data[name] = options(data[name]);
+            } else if(type) {
+                data[name] = type(data[name]);
             }
         })
     }
