@@ -1,6 +1,9 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {FormBuilder, Validators, FormGroup} from "@angular/forms";
 import {isArray, isString} from "util";
+import {Observable} from "rxjs/Rx";
+import {catchError} from "rxjs/internal/operators";
+import {MatSnackBar} from "@angular/material";
 
 
 
@@ -25,8 +28,8 @@ function getField(data, api){
         Object.assign(data, TYPE_WIDGETS[type] || {});
         if(options['isSerializer']) {
             data['widget'] = 'search-input';
-            // TODO: obtener queryset de sub-serializer desde api. _api no está disponible en sub-serializer
-            data['queryset'] = data['queryset'] || null; // << TODO
+            let apiClass = options['type']['api_class'];
+            data['queryset'] = data['queryset'] || api.injector.get(apiClass);
         }
     }
     if(data['required'] === undefined) {
@@ -74,7 +77,8 @@ export class DjangoFormComponent implements OnInit, OnChanges {
     @Input() instance: any;
     @Input() fields: any[] = [];
 
-    constructor(public formBuilder: FormBuilder) { }
+    constructor(public formBuilder: FormBuilder,
+                public snackBar: MatSnackBar) { }
 
     ngOnInit() {
     }
@@ -118,6 +122,35 @@ export class DjangoFormComponent implements OnInit, OnChanges {
         return err;
     }
 
-    onFormSubmit() {}
+    getApiMethod(data) {
+        return this.api.create(data)
+    }
+
+    processData(data) {
+        return data;
+    }
+
+    onFormSubmit(data) {
+        data = this.processData(data);
+        this.getApiMethod(data)
+            .pipe(catchError((err, caught) => {
+                console.log(err);
+                Object.keys(err.error).forEach(key => {
+                    let value = err.error[key];
+                    let errorDict = {};
+                    for (let item of value) {
+                        errorDict[item] = true;
+                    }
+                    this.form.controls[key].setErrors(errorDict);
+                });
+                return Observable.empty();
+            }))
+            .subscribe(() => {
+            this.snackBar.open('Success', 'Close', {
+                duration: 3000,
+            });
+
+        });
+    }
 
 }

@@ -103,7 +103,7 @@ export class SerializerService {
         let value = this;
         name.split('__').forEach((item) => {
             value = value[item];
-            if(value['type'] == 'nested object') {
+            if((value || {})['type'] == 'nested object') {
                 value = value['children'];
             }
         });

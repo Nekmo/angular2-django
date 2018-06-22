@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable, Injector} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {SerializerService} from "./serializer.service";
 import {map} from "rxjs/operators";
@@ -37,7 +37,8 @@ export class ApiService {
     _queryParams = {};
     _options: Options;
 
-    constructor(public http: HttpClient) { }
+    constructor(public http: HttpClient,
+                public injector: Injector) { }
 
 
     get(pk) {
