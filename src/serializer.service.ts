@@ -77,7 +77,20 @@ export class SerializerService {
 
     constructor(api, data) {
         this._api = api;
+        this.transformData(data);
         Object.assign(this, data);
+    }
+
+    transformData(data) {
+        let fields = this.constructor['fields'];
+        Object.entries(fields).forEach(([name, options]) => {
+            let type = options['type'];
+            if(options['isSerializer']) {
+                data[name] = new type(this._api, data[name]);
+            } else {
+                data[name] = options(data[name]);
+            }
+        })
     }
 
     getData() {

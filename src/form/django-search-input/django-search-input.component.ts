@@ -108,7 +108,9 @@ export class DjangoSearchInputComponent implements OnInit {
 
     //From ControlValueAccessor interface
     writeValue(value: any) {
+        // Se llama a esta función desde fuera del componente
         this.innerValue = value;
+        this.setInputText(value);
     }
 
     //From ControlValueAccessor interface
@@ -151,7 +153,14 @@ export class DjangoSearchInputComponent implements OnInit {
             return
         }
         this.lastOption = option;
-        this.searchInput.value = option.value.getName();
+        this.setInputText(option.value);
+    }
+
+    setInputText(value) {
+        if(value === undefined || value === null) {
+            return;
+        }
+        this.searchInput.value = value.getName();
     }
 
     clear() {
