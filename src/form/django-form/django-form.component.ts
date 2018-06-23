@@ -141,7 +141,7 @@ export class DjangoFormComponent implements OnInit, OnChanges {
     onFormSubmit(data) {
         Object.entries(data).forEach(([key, value]) => {
             if(value['getData']) {
-                data[key] = value.getData();
+                data[key] = value['getData']();
             }
         });
         data = this.processData(data);
