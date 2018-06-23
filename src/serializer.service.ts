@@ -82,11 +82,14 @@ export class SerializerService {
     }
 
     transformData(data) {
-        let fields = this.constructor['fields'];
+        let fields = this.constructor['fields'] || {};
         Object.entries(fields).forEach(([name, options]) => {
             let type = options['type'];
             if(options['isSerializer']) {
+                // TODO: no es su propio serializer
                 data[name] = new type(this._api, data[name]);
+            } else if(type == Date) {
+                data[name] = new type(data[name]);
             } else if(type) {
                 data[name] = type(data[name]);
             }

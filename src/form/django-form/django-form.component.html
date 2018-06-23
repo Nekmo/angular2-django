@@ -60,6 +60,7 @@
             </div>
 
             <django-search-input *ngIf="input['widget'] == 'search-input'" [input]="input"
+                                 [c]="form.controls[input['field']]"
                                  ngClass="{{ input['class'] }}" [queryset]="input['queryset']"
                                  [form]="form" formControlName="{{ input['field'] }}"></django-search-input>
         </ng-container>

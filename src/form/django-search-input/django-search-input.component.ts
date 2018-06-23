@@ -46,6 +46,7 @@ export class DjangoSearchInputComponent implements OnInit {
 
     ngOnInit() {
         // RESET the custom input form control UI when the form control is RESET
+        console.log(this.c);
         this.c.valueChanges.subscribe(
             () => {
                 // check condition if the form control is RESET

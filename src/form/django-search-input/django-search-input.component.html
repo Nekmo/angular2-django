@@ -1,9 +1,9 @@
 <mat-form-field fxFlex="100">
     <!-- (blur)="onChange($event, input.value)" -->
     <input matInput placeholder="{{ input['placeholder'] }}" type="{{ input['type'] }}" [matAutocomplete]="auto"
-            #searchInput (keyup)="searchWord(searchInput.value)" (focus)="searchClick();"
+            #searchInput (keyup)="searchWord(searchInput.value)" (focus)="searchClick();" [disabled]="c.disabled"
             (blur)="focusOut()">
-    <button mat-button *ngIf="searchInput.value" matSuffix mat-icon-button aria-label="Clear"
+    <button mat-button *ngIf="searchInput.value && !c.disabled" matSuffix mat-icon-button aria-label="Clear"
             (click)="clear()">
       <mat-icon>close</mat-icon>
     </button>

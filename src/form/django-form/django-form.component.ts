@@ -53,7 +53,11 @@ function getControlConfig(field, value = '') {
     let config: any[] = [];
     let data = {};
     data['disabled'] = field['disabled'] || false;
-    data['value'] = field['default'] || '';
+    if(field['default'] === undefined) {
+        data['value'] =  '';
+    } else {
+        data['value'] = field['default'];
+    }
     data['value'] = value || field['default'];
 
     config.push(data);
@@ -123,7 +127,11 @@ export class DjangoFormComponent implements OnInit, OnChanges {
     }
 
     getApiMethod(data) {
-        return this.api.create(data)
+        if(this.instance) {
+            return this.api.save(this.instance.id, data);
+        } else {
+            return this.api.create(data);
+        }
     }
 
     processData(data) {
@@ -131,17 +139,27 @@ export class DjangoFormComponent implements OnInit, OnChanges {
     }
 
     onFormSubmit(data) {
+        Object.entries(data).forEach(([key, value]) => {
+            if(value['getData']) {
+                data[key] = value.getData();
+            }
+        });
         data = this.processData(data);
         this.getApiMethod(data)
             .pipe(catchError((err, caught) => {
-                console.log(err);
+                if(!err.error) {
+                    alert(err);
+                    return
+                }
                 Object.keys(err.error).forEach(key => {
                     let value = err.error[key];
                     let errorDict = {};
                     for (let item of value) {
                         errorDict[item] = true;
                     }
-                    this.form.controls[key].setErrors(errorDict);
+                    if(this.form.controls[key]) {
+                        this.form.controls[key].setErrors(errorDict);
+                    }
                 });
                 return Observable.empty();
             }))
