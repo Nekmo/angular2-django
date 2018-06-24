@@ -56,6 +56,10 @@ export class ApiService {
         return this.pipeHttp(this.http.put(this.getUrlDetail(pk), data));
     }
 
+    delete(pk) {
+        return this.pipeHttp(this.http.delete(this.getUrlDetail(pk)));
+    }
+
     pipeHttp(observable, listMode = false) {
         return observable.pipe(
             map((resp) => this.convert(resp, listMode))

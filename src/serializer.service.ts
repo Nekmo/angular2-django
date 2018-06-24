@@ -152,4 +152,8 @@ export class SerializerService {
     save() {
         return this._api.save(this.getPk(), this.getData());
     }
+
+    delete() {
+        return this._api.delete(this.getPk());
+    }
 }
