@@ -57,7 +57,7 @@ export class ApiService {
     }
 
     delete(pk) {
-        return this.pipeHttp(this.http.delete(this.getUrlDetail(pk)));
+        return this.http.delete(this.getUrlDetail(pk));
     }
 
     pipeHttp(observable, listMode = false) {
