@@ -35,7 +35,6 @@ export class DjangoTableComponent implements OnInit, OnChanges {
     ) { }
 
     ngOnInit() {
-        this.displayedColumns = this.columns;
         this.routerPage = this.router.url.split('?')[0].split('#')[0];
         this.queryset.options().subscribe((options) => {
             this.options = options;

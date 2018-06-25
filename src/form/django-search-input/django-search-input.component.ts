@@ -183,6 +183,9 @@ export class DjangoSearchInputComponent implements OnInit {
         if(this.textInput && isString(value)) {
             this.searchInput.value = value;
         } else {
+            if(value['getName'] === undefined) {
+                throw new Error(`getName() method is undefined on ${value.constructor.name}`)
+            }
             this.searchInput.value = value.getName();
         }
     }

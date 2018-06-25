@@ -83,6 +83,10 @@ export class SerializerService {
 
     transformData(data) {
         let fields = this.constructor['fields'] || {};
+        if(data === null) {
+            // Instance is null on model
+            return null
+        }
         Object.entries(fields).forEach(([name, options]) => {
             let type = options['type'];
             if(options['isSerializer']) {
@@ -131,6 +135,9 @@ export class SerializerService {
             let fields = field.split('__');
             let nextFields = fields.splice(1);
             let type_ = this.getNestedSerializer(fields[0]);
+            if(type_ === undefined) {
+                throw new Error(`Missing serializer for ${fields[0]} on ${field}`);
+            }
             if(type_.prototype['__proto__'].constructor.name == 'SerializerService') {
                 return type_.getFieldOptions(nextFields.join('__'));
             } else {

@@ -147,6 +147,9 @@ export class ApiService {
         let data = this._options.actions.POST;
         name.split('__').forEach((item, i, array) => {
             data = data[item];
+            if(data === undefined) {
+                throw new Error(`Invalid item ${item} on ${name} query`);
+            }
             if(data['type'] == 'nested object' && i !== array.length - 1) {
                 data = data['children'];
             }
