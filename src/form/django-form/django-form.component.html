@@ -8,6 +8,7 @@
             <h2 *ngIf="input['widget'] == 'title'">{{ input['text'] }}</h2>
 
             <mat-form-field fxFlex="{{ input['flex'] }}" ngClass="{{ input['class'] }}"
+                            [ngStyle]="{'display': input['display']}"
                             *ngIf="input['widget'] == 'input'">
                 <input matInput placeholder="{{ input['placeholder'] }}" type="{{ input['type'] }}"
                        formControlName="{{ input['field'] }}">
@@ -60,7 +61,9 @@
             </div>
 
             <django-search-input *ngIf="input['widget'] == 'search-input'" [input]="input"
-                                 [c]="form.controls[input['field']]"
+                                 style="width: 100%;"
+                                 [c]="form.controls[input['field']]" [textInput]="input['textInput'] || false"
+                                 (selectedItem)="(input['selectedItem'] ? input['selectedItem']($event) : undefined)"
                                  ngClass="{{ input['class'] }}" [queryset]="input['queryset']"
                                  [form]="form" formControlName="{{ input['field'] }}"></django-search-input>
         </ng-container>

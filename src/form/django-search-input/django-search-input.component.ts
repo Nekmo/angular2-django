@@ -1,8 +1,9 @@
-import {Component, ElementRef, forwardRef, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, forwardRef, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {NG_VALUE_ACCESSOR, FormControl} from "@angular/forms";
 import {_} from "../django-form/django-form.component";
 import {MatInput, MatAutocomplete, MatAutocompleteTrigger} from '@angular/material';
 import {HttpClient} from "@angular/common/http";
+import {isString} from "util";
 
 // https://stackoverflow.com/questions/39661430/angular-2-formcontrolname-inside-component
 export const CUSTOM_INPUT_CONTROL_VALUE_ACCESSOR: any = {
@@ -27,9 +28,12 @@ export class DjangoSearchInputComponent implements OnInit {
 
     //current form control input. helpful in validating and accessing form control
     @Input() c:FormControl = new FormControl();
+    @Input() textInput: boolean = false;
+
+    @Output() selectedItem: EventEmitter<any> = new EventEmitter<any>();
 
     // get reference to the input element
-    @ViewChild('input')  inputRef:ElementRef;
+    @ViewChild('input') inputRef:ElementRef;
     @ViewChild(MatInput) searchInput: MatInput;
     @ViewChild(MatAutocomplete) auto: MatAutocomplete;
     @ViewChild(MatAutocompleteTrigger) autoTrigger: MatAutocompleteTrigger;
@@ -46,17 +50,15 @@ export class DjangoSearchInputComponent implements OnInit {
 
     ngOnInit() {
         // RESET the custom input form control UI when the form control is RESET
-        console.log(this.c);
         this.c.valueChanges.subscribe(
             () => {
                 // check condition if the form control is RESET
                 if (this.c.value == "" || this.c.value == null || this.c.value == undefined) {
-                    this.innerValue = "";
-                    this.inputRef.nativeElement.value = "";
+                    // this.innerValue = "";
+                    // this.inputRef.nativeElement.value = "";
                 }
             }
         );
-
     }
 
     getErrorMessage(field) {
@@ -66,7 +68,6 @@ export class DjangoSearchInputComponent implements OnInit {
         if(!err){
             let errList = Object.keys(field.errors);
             err = errList.join(', ');
-            console.log(err);
         }
         return err;
     }
@@ -111,6 +112,9 @@ export class DjangoSearchInputComponent implements OnInit {
     writeValue(value: any) {
         // Se llama a esta función desde fuera del componente
         this.innerValue = value;
+        if(this.lastOption === undefined && !this.textInput && value) {
+            this.setLastOption({value: value});
+        }
         this.setInputText(value);
     }
 
@@ -128,10 +132,15 @@ export class DjangoSearchInputComponent implements OnInit {
         if(term == this.lastTerm) {
             return;
         }
+
         this.queryset.search(term).all().subscribe((items) => {
             this.items = items;
             this.lastTerm = term;
-        })
+        });
+        if(this.textInput) {
+            this.c.patchValue(this.searchInput.value);
+            this.selectedItem.emit(null);
+        }
     }
 
     searchClick() {
@@ -140,7 +149,10 @@ export class DjangoSearchInputComponent implements OnInit {
     }
 
     focusOut() {
-        this.setItem(this.lastOption);
+        console.log(['Focusout', this.lastOption]);
+        if(!this.textInput) {
+            this.setItem(this.lastOption);
+        }
     }
 
     selected(event) {
@@ -153,24 +165,39 @@ export class DjangoSearchInputComponent implements OnInit {
         if(!option) {
             return
         }
-        this.lastOption = option;
+        this.setLastOption(option);
         this.setInputText(option.value);
+        let value = option.value;
+        this.selectedItem.emit(value);
+        if(this.textInput) {
+            value = value.getName();
+        }
+        this.c.patchValue(value);
     }
 
     setInputText(value) {
         if(value === undefined || value === null) {
+            this.searchInput.value = '';
             return;
         }
-        this.searchInput.value = value.getName();
+        if(this.textInput && isString(value)) {
+            this.searchInput.value = value;
+        } else {
+            this.searchInput.value = value.getName();
+        }
     }
 
     clear() {
-        this.lastOption = null;
+        this.setLastOption(null);
         this.searchInput.value = '';
         this.searchWord('');
+        this.c.patchValue((this.textInput ? '' : null));
         setTimeout(() => {
             this.autoTrigger.openPanel();
         });
     }
 
+    setLastOption(option) {
+        this.lastOption = option;
+    }
 }

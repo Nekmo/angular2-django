@@ -3,8 +3,8 @@
     <input matInput placeholder="{{ input['placeholder'] }}" type="{{ input['type'] }}" [matAutocomplete]="auto"
             #searchInput (keyup)="searchWord(searchInput.value)" (focus)="searchClick();" [disabled]="c.disabled"
             (blur)="focusOut()">
-    <button mat-button *ngIf="searchInput.value && !c.disabled" matSuffix mat-icon-button aria-label="Clear"
-            (click)="clear()">
+    <button mat-button *ngIf="searchInput.value && !c.disabled && !textInput" matSuffix mat-icon-button
+            aria-label="Clear" (click)="clear()">
       <mat-icon>close</mat-icon>
     </button>
     <mat-error *ngIf="form.controls[input['field']].invalid">

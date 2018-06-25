@@ -1,8 +1,9 @@
 # angular-django
 
-angular2-django is **Django Rest Framework API** for Angular 5+. Use the Django API in an easy way and as objects.
+angular-django is **Django Rest Framework API** & Material components for Angular 5+. Use the Django API in an 
+easy way and as objects and build grids, lists and forms in an easy and reusable way.
 
-## Usage
+## API Usage
 Some examples of the API.
 
 
@@ -94,6 +95,33 @@ export class SnippetApi extends ApiService {
     }
 }
 ```
+
+## Material Components
+
+### django-table
+
+#### Features
+
+- Sort columns
+- Pagination
+- Change page size
+- Parameters in the url
+
+
+### django-form
+
+### Features
+
+- Create, update and patch methods
+- Nested models (OneToOne & ManyToOne; OneToMany & ManyToMany unsupported)
+- Featured widgets:
+  - Input (text, number, etc. types)
+  - Textarea
+  - Select (django choices)
+  - Datetime
+  - Checkbox
+  - django-search-input (Search on Django via API and select instance)
+- Input server validation
 
 
 ## Installation

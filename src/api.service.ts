@@ -56,6 +56,10 @@ export class ApiService {
         return this.pipeHttp(this.http.put(this.getUrlDetail(pk), data));
     }
 
+    patch(pk, data) {
+        return this.pipeHttp(this.http.patch(this.getUrlDetail(pk), data));
+    }
+
     delete(pk) {
         return this.http.delete(this.getUrlDetail(pk));
     }

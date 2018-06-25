@@ -4,6 +4,7 @@ import {isArray, isString} from "util";
 import {Observable} from "rxjs/Rx";
 import {catchError} from "rxjs/internal/operators";
 import {MatSnackBar} from "@angular/material";
+import {lookupsToDicts} from "../../utils";
 
 
 
@@ -21,6 +22,9 @@ const TYPE_WIDGETS = {
 function getField(data, api){
     if(isString(data)) {
         data = {"field": data};
+    }
+    if(!data['field']) {
+        return
     }
     if(data['widget'] === undefined) {
         let options = api.serializer.getFieldOptions(data['field']);
@@ -40,6 +44,10 @@ function getField(data, api){
     }
     if(data['widget'] == "input" && data['type'] === undefined) {
         data['type'] = "text";
+    }
+    if(data['widget'] == "input" && data['type'] == 'hidden') {
+        data['type'] = "text";
+        data['display'] = "none";
     }
     if(!data['flex']) {
         data['flex'] = 100;
@@ -80,6 +88,7 @@ export class DjangoFormComponent implements OnInit, OnChanges {
     @Input() api: any;
     @Input() instance: any;
     @Input() fields: any[] = [];
+    @Input() update: 'PUT' | 'PATCH' = 'PUT';
 
     constructor(public formBuilder: FormBuilder,
                 public snackBar: MatSnackBar) { }
@@ -100,6 +109,9 @@ export class DjangoFormComponent implements OnInit, OnChanges {
                 }
                 return itemsArray.map((item) => {
                     let field = getField(item, this.api);
+                    if(!field) {
+                        return item;
+                    }
                     let value: any = '';
                     if(this.instance) {
                         value = this.instance.getValue(field['field']);
@@ -110,7 +122,6 @@ export class DjangoFormComponent implements OnInit, OnChanges {
             });
 
             this.form = this.formBuilder.group(controlsConfig);
-
         });
     }
 
@@ -126,9 +137,20 @@ export class DjangoFormComponent implements OnInit, OnChanges {
         return err;
     }
 
+    getFieldOptions(field) {
+        let inputs = [].concat(...this.schema);
+        return inputs.find(x => x.field == field);
+    }
+
+    getDefaultValue(field) {
+        return this.getFieldOptions(field)['default'];
+    }
+
     getApiMethod(data) {
-        if(this.instance) {
+        if(this.instance && this.update == 'PUT') {
             return this.api.save(this.instance.id, data);
+        } else if(this.instance && this.update == 'PATCH') {
+            return this.api.patch(this.instance.id, data);
         } else {
             return this.api.create(data);
         }
@@ -140,10 +162,11 @@ export class DjangoFormComponent implements OnInit, OnChanges {
 
     onFormSubmit(data) {
         Object.entries(data).forEach(([key, value]) => {
-            if(value['getData']) {
+            if(value && value['getData']) {
                 data[key] = value['getData']();
             }
         });
+        data = lookupsToDicts(data);
         data = this.processData(data);
         this.getApiMethod(data)
             .pipe(catchError((err, caught) => {
