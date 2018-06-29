@@ -135,6 +135,10 @@ export class DjangoTableComponent implements OnInit, OnChanges {
         this.router.navigate([this.getRouterPage()], {queryParams: params});
     }
 
+    setSearch(term) {
+        this.setParam('search', term);
+    }
+
     getRouterPage() {
         return this.routerPage;
     }
