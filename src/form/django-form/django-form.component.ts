@@ -89,6 +89,8 @@ export class DjangoFormComponent implements OnInit, OnChanges {
     @Input() instance: any;
     @Input() fields: any[] = [];
     @Input() update: 'PUT' | 'PATCH' = 'PUT';
+    @Input() inline: boolean = false;
+    @Input() buttons: boolean = true;
 
     constructor(public formBuilder: FormBuilder,
                 public snackBar: MatSnackBar) { }
