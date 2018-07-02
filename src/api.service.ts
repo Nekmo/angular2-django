@@ -27,7 +27,21 @@ export class Options {
 }
 
 
+export function getCookie(name) {
+   if (!document.cookie) {
+       return null;
+   }
 
+   const xsrfCookies = document.cookie.split(';')
+       .map(c => c.trim())
+       .filter(c => c.startsWith(name + '='));
+
+   if (xsrfCookies.length === 0) {
+       return null;
+   }
+
+   return decodeURIComponent(xsrfCookies[0].split('=')[1]);
+}
 
 
 // @Injectable({
@@ -49,19 +63,22 @@ export class ApiService {
     }
 
     create(data) {
-        return this.pipeHttp(this.http.post(this.getUrlList(), data));
+        return this.pipeHttp(this.http.post(this.getUrlList(), data,
+            {headers: {'X-CSRFToken': getCookie('csrftoken') || ''}}));
     }
 
     save(pk, data) {
-        return this.pipeHttp(this.http.put(this.getUrlDetail(pk), data));
+        return this.pipeHttp(this.http.put(this.getUrlDetail(pk), data,
+            {headers: {'X-CSRFToken': getCookie('csrftoken') || ''}}));
     }
 
     patch(pk, data) {
-        return this.pipeHttp(this.http.patch(this.getUrlDetail(pk), data));
+        return this.pipeHttp(this.http.patch(this.getUrlDetail(pk), data,
+            {headers: {'X-CSRFToken': getCookie('csrftoken') || ''}}));
     }
 
     delete(pk) {
-        return this.http.delete(this.getUrlDetail(pk));
+        return this.http.delete(this.getUrlDetail(pk), {headers: {'X-CSRFToken': getCookie('csrftoken') || ''}});
     }
 
     pipeHttp(observable, listMode = false) {
