@@ -25,6 +25,7 @@ export class DjangoSearchInputComponent implements OnInit {
     @Input() input: {};
     @Input() form: any;
     @Input() queryset: any;
+    @Input() placeholder: string;
 
     //current form control input. helpful in validating and accessing form control
     @Input() c:FormControl = new FormControl();
@@ -49,6 +50,7 @@ export class DjangoSearchInputComponent implements OnInit {
     constructor() { }
 
     ngOnInit() {
+        this.input = this.input || {};  // TODO: input no requerido
         // RESET the custom input form control UI when the form control is RESET
         this.c.valueChanges.subscribe(
             () => {
@@ -149,8 +151,7 @@ export class DjangoSearchInputComponent implements OnInit {
     }
 
     focusOut() {
-        console.log(['Focusout', this.lastOption]);
-        if(!this.textInput) {
+        if(!this.textInput && !this.searchInput.value) {
             this.setItem(this.lastOption);
         }
     }
@@ -190,14 +191,16 @@ export class DjangoSearchInputComponent implements OnInit {
         }
     }
 
-    clear() {
+    clear(open = true) {
         this.setLastOption(null);
         this.searchInput.value = '';
         this.searchWord('');
         this.c.patchValue((this.textInput ? '' : null));
-        setTimeout(() => {
-            this.autoTrigger.openPanel();
-        });
+        if(open) {
+            setTimeout(() => {
+                this.autoTrigger.openPanel();
+            });
+        }
     }
 
     setLastOption(option) {

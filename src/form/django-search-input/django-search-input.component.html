@@ -1,13 +1,14 @@
 <mat-form-field fxFlex="100">
     <!-- (blur)="onChange($event, input.value)" -->
-    <input matInput placeholder="{{ input['placeholder'] }}" type="{{ input['type'] }}" [matAutocomplete]="auto"
+    <input matInput placeholder="{{ input['placeholder'] || placeholder }}" type="{{ input['type'] }}"
+           [matAutocomplete]="auto"
             #searchInput (keyup)="searchWord(searchInput.value)" (focus)="searchClick();" [disabled]="c.disabled"
             (blur)="focusOut()">
     <button mat-button *ngIf="searchInput.value && !c.disabled && !textInput" matSuffix mat-icon-button
             aria-label="Clear" (click)="clear()">
       <mat-icon>close</mat-icon>
     </button>
-    <mat-error *ngIf="form.controls[input['field']].invalid">
+    <mat-error *ngIf="form && form.controls[input['field']].invalid">
         {{getErrorMessage(form.controls[input['field']]) }}
     </mat-error>
     <mat-hint *ngIf="input['help_text']">{{ input['help_text'] }}</mat-hint>
