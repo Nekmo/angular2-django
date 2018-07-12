@@ -4,7 +4,6 @@ import { Injectable } from '@angular/core';
 // TODO: remove
 export function InputConverter(converter?: (api, value: any) => any) {
     return (target: Object, key: string) => {
-        console.log(target);
         if (converter === undefined) {
             let metadata = (<any>Reflect).getMetadata("design:type", target, key);
             if (metadata === undefined || metadata === null)
@@ -47,7 +46,7 @@ export function InputConverter(converter?: (api, value: any) => any) {
 }
 
 
-export function Field(type?: any, required: boolean = true, defaultValue?: any,
+export function Field(type?: any, many: boolean = false, required: boolean = true, defaultValue?: any,
                       readOnly: boolean = false, writeOnly: boolean = false,
                       helpText?: string) {
     return (target: Object, key: string) => {
@@ -64,6 +63,7 @@ export function Field(type?: any, required: boolean = true, defaultValue?: any,
             typeName: (type ? type.name.toLowerCase() : ''), type: type, isSerializer: isSerializer,
             required: required, defaultValue: defaultValue,
             readOnly: readOnly, writeOnly: writeOnly, helpText: helpText,
+            many: many,
         };
     }
 }
@@ -89,7 +89,9 @@ export class SerializerService {
         }
         Object.entries(fields).forEach(([name, options]) => {
             let type = options['type'];
-            if(options['isSerializer']) {
+            if(options['isSerializer'] && options['many']) {
+                data[name] = data[name].map((item) => new type(this._api, item));
+            } else if(options['isSerializer']) {
                 // TODO: no es su propio serializer
                 data[name] = new type(this._api, data[name]);
             } else if(type == Date) {
