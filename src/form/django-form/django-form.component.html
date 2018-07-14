@@ -31,8 +31,9 @@
                             *ngIf="input['widget'] == 'select'">
                 <mat-select placeholder="{{ input['placeholder'] }}"
                             formControlName="{{ input['field'] }}">
-                    <mat-option *ngFor="let choice of (input['choices'] || [])" [value]="choice">
-                        {{ choice.name || choice.getName() }}
+                    <mat-option *ngFor="let choice of (input['choices'] || [])"
+                                [value]="(input['value_key'] ? choice[input['value_key']] : choice)">
+                        {{ choice.name || choice.display_name || choice.getName() }}
                     </mat-option>
                 </mat-select>
                 <mat-error *ngIf="form.controls[input['field']].invalid">

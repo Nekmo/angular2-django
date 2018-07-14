@@ -182,4 +182,8 @@ export class ApiService {
         return (this.getOptionField(name) || {})['help_text'];
     }
 
+    getChoices(name) {
+        return (this.getOptionField(name) || {})['choices'];
+    }
+
 }

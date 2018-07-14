@@ -49,6 +49,10 @@ function getField(data, api){
         data['type'] = "text";
         data['display'] = "none";
     }
+    if(data['widget'] == "select" && !data['choices']) {
+        data['choices'] =  api.getChoices(data['field']);
+        data['value_key'] = 'value';
+    }
     if(!data['flex']) {
         data['flex'] = 100;
     }
