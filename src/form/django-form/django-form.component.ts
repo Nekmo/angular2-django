@@ -128,7 +128,11 @@ export class DjangoFormComponent implements OnInit, OnChanges {
             });
 
             this.form = this.formBuilder.group(controlsConfig);
+            this.formInitialized();
         });
+    }
+
+    formInitialized() {
     }
 
     getErrorMessage(field) {
