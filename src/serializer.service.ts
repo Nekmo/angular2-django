@@ -135,7 +135,8 @@ export class SerializerService {
     getDisplayName(field) {
         let value = this.getValue(field);
         let choices = this._api.getChoices(field);
-        return choices.find((option) => option['value'] == value )[0];
+        let parts = field.split('__');
+        return choices.find((option) => option['value'] == value )['display_name'];
     }
 
     static getFieldOptions(field) {

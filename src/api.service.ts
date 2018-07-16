@@ -135,12 +135,21 @@ export class ApiService {
     }
 
     options() {
+
         return Observable.create((observer) => {
-            if(this._options) {
-                observer.next(this._options);
+            // if(this._options) {
+            //     observer.next(this._options);
+            // } else {
+            //     this.http.options(this.url).subscribe((options: Options) => {
+            //         this._options = options;
+            //         observer.next(options);
+            //     });
+            // }
+            if(this.constructor['_options']) {
+                observer.next(this.constructor['_options']);
             } else {
                 this.http.options(this.url).subscribe((options: Options) => {
-                    this._options = options;
+                    this.constructor['_options'] = options;
                     observer.next(options);
                 });
             }
@@ -158,10 +167,10 @@ export class ApiService {
     }
 
     getOptionField(name) {
-        if(!this._options) {
+        if(!this.constructor['_options']) {
             return
         }
-        let data = this._options.actions.POST;
+        let data = this.constructor['_options'].actions.POST;
         name.split('__').forEach((item, i, array) => {
             data = data[item];
             if(data === undefined) {
