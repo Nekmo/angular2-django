@@ -63,22 +63,23 @@ export class ApiService {
     }
 
     create(data) {
-        return this.pipeHttp(this.http.post(this.getUrlList(), data,
-            {headers: {'X-CSRFToken': getCookie('csrftoken') || ''}}));
+        return this.pipeHttp(this.http.post(this.getUrlList(), data, this.defaultHttpOptions()));
     }
 
     save(pk, data) {
-        return this.pipeHttp(this.http.put(this.getUrlDetail(pk), data,
-            {headers: {'X-CSRFToken': getCookie('csrftoken') || ''}}));
+        return this.pipeHttp(this.http.put(this.getUrlDetail(pk), data, this.defaultHttpOptions()));
     }
 
     patch(pk, data) {
-        return this.pipeHttp(this.http.patch(this.getUrlDetail(pk), data,
-            {headers: {'X-CSRFToken': getCookie('csrftoken') || ''}}));
+        return this.pipeHttp(this.http.patch(this.getUrlDetail(pk), data, this.defaultHttpOptions()));
     }
 
     delete(pk) {
-        return this.http.delete(this.getUrlDetail(pk), {headers: {'X-CSRFToken': getCookie('csrftoken') || ''}});
+        return this.http.delete(this.getUrlDetail(pk), this.defaultHttpOptions());
+    }
+
+    defaultHttpOptions() {
+        return {headers: {'X-CSRFToken': getCookie('csrftoken') || ''}};
     }
 
     pipeHttp(observable, listMode = false) {
