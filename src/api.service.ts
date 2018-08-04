@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {SerializerService} from "./serializer.service";
 import {map} from "rxjs/operators";
 import {Observable} from "rxjs/Rx";
+import {isEqual} from "lodash";
 
 
 
@@ -165,6 +166,10 @@ export class ApiService {
         let api = new this['__proto__'].constructor(this.http, this.injector);
         api._queryParams = Object.assign({}, this._queryParams);
         return api;
+    }
+
+    isEqual(other) {
+        return this.url == other.url && isEqual(this._queryParams, other._queryParams);
     }
 
     getOptionField(name) {
