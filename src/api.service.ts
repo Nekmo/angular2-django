@@ -133,6 +133,7 @@ export class ApiService {
     }
 
     setParams(params) {
+        Object.keys(params).forEach((key) => (params[key] == undefined) && delete params[key]);
         this._queryParams = Object.assign(this._queryParams, params);
     }
 
