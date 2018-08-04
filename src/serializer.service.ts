@@ -89,6 +89,9 @@ export class SerializerService {
         }
         Object.entries(fields).forEach(([name, options]) => {
             let type = options['type'];
+            if(data[name] === undefined) {
+                return
+            }
             if(options['isSerializer'] && options['many']) {
                 data[name] = data[name].map((item) => new type(this._api, item));
             } else if(options['isSerializer']) {
