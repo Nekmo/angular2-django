@@ -162,7 +162,7 @@ export class ApiService {
     }
 
     copy() {
-        let api = new this['__proto__'].constructor(this.http);
+        let api = new this['__proto__'].constructor(this.http, this.injector);
         api._queryParams = Object.assign({}, this._queryParams);
         return api;
     }
