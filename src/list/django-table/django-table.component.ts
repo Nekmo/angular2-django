@@ -23,6 +23,7 @@ export class DjangoTableComponent implements OnInit, OnChanges {
 
     @Input() queryset: any;
     @Input() columns: any;
+    @Input() listMethod: string = 'all';
     @Output() rowClick: EventEmitter<any> = new EventEmitter<any>();
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -156,7 +157,8 @@ export class DjangoTableComponent implements OnInit, OnChanges {
             params['search'] = undefined;
         }
         queryset = queryset.page(params['page'] || 1, params['page_size']);
-        queryset.all().subscribe((items) => {
+        console.log(queryset._queryParams)
+        queryset[this.listMethod]().subscribe((items) => {
             this.items = items;
             this.itemsLength = items.count;
         });
