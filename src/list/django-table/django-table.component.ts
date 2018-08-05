@@ -1,15 +1,39 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
+import {
+    AfterContentInit,
+    Component,
+    ContentChildren, Directive,
+    EventEmitter, forwardRef,
+    Input,
+    OnChanges,
+    OnInit,
+    Output, QueryList,
+    SimpleChanges,
+    ViewChild
+} from '@angular/core';
 import {MatInput, MatPaginator, MatSort, MatSortable} from "@angular/material";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Options} from "../../api.service";
 import {isString} from "util";
+
+
+@Directive({
+  selector: '[djangoColumnDef]',
+})
+export class DjangoColumnDef {
+  /** Unique name for this column. */
+  @Input('djangoColumnDef') name: string;
+  // @Input('row') row: any;
+
+  /** Whether this column should be sticky positioned at the start of the row */
+}
+
 
 @Component({
   selector: 'django-table',
   templateUrl: './django-table.component.html',
   styleUrls: ['./django-table.component.scss']
 })
-export class DjangoTableComponent implements OnInit, OnChanges {
+export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit {
 
     routerPage: string;
     defaultPageIndex: number = 10;
@@ -29,6 +53,8 @@ export class DjangoTableComponent implements OnInit, OnChanges {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatInput) searchInput: MatInput;
+
+    @ContentChildren(DjangoColumnDef) columnDefs: QueryList<DjangoColumnDef>;
 
     constructor(
         public router: Router,
@@ -51,7 +77,16 @@ export class DjangoTableComponent implements OnInit, OnChanges {
         }
     }
 
-    afterOnInit() {}
+    afterOnInit() {
+    }
+
+    ngAfterContentInit() {
+        console.log(this.columnDefs);
+    }
+
+    getCustomColumn(name) {
+        return this.columnDefs.find((column) => { return column.name == name });
+    }
 
     setListeners() {
         this.paramsChangeListener();

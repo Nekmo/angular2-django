@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import {
     MatTableModule, MatIconModule, MatPaginatorModule, MatFormFieldModule, MatSortModule,
 } from "@angular/material";
-import {DjangoTableComponent} from "./django-table/django-table.component";
+import {DjangoColumnDef, DjangoTableComponent} from "./django-table/django-table.component";
 import {RouterModule} from "@angular/router";
 
 @NgModule({
@@ -19,10 +19,12 @@ import {RouterModule} from "@angular/router";
 
   ],
   declarations: [
-      DjangoTableComponent
+      DjangoTableComponent,
+      DjangoColumnDef,
   ],
     exports: [
         DjangoTableComponent,
+        DjangoColumnDef,
     ]
 })
 export class DjangoListModule { }

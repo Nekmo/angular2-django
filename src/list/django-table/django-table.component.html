@@ -9,12 +9,23 @@
         matSortDirection="asc"
         matSortActive="created"
         -->
+
         <mat-table [dataSource]="items" matSort matSortDisableClear>
 
             <!-- ID Column -->
             <ng-container matColumnDef="{{ getColumn(column) }}" *ngFor="let column of columns">
                 <mat-header-cell *matHeaderCellDef mat-sort-header> {{ getLabel(column) }} </mat-header-cell>
-                <mat-cell *matCellDef="let row"> {{ getValue(row, column) }} </mat-cell>
+
+                <mat-cell *matCellDef="let row">
+                    <!-- TODO: slow ngIf!! -->
+                    <ng-container *ngIf="getCustomColumn(getColumn(column)); else defaultCell">
+                        Custom!
+                    </ng-container>
+
+                    <ng-template #defaultCell>
+                    {{ getValue(row, column) }}
+                    </ng-template>
+                </mat-cell>
             </ng-container>
 
             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
