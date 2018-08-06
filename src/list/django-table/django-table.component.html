@@ -14,9 +14,12 @@
 
             <!-- ID Column -->
             <ng-container matColumnDef="{{ getColumn(column) }}" *ngFor="let column of columns">
-                <mat-header-cell *matHeaderCellDef mat-sort-header> {{ getLabel(column) }} </mat-header-cell>
+                <mat-header-cell *matHeaderCellDef mat-sort-header
+                                 [ngStyle]="(column['style'] ? column['style'] : {})">
+                    {{ getLabel(column) }}
+                </mat-header-cell>
 
-                <mat-cell *matCellDef="let row">
+                <mat-cell *matCellDef="let row" [ngStyle]="(column['style'] ? column['style'] : {})">
                     <!-- <django-render-cell></django-render-cell> -->
                     <!-- TODO: slow ngIf!! -->
                     <ng-container *ngIf="getCustomColumn(getColumn(column)); else defaultCell">
