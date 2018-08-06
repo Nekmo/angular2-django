@@ -3,7 +3,12 @@ import { CommonModule } from '@angular/common';
 import {
     MatTableModule, MatIconModule, MatPaginatorModule, MatFormFieldModule, MatSortModule,
 } from "@angular/material";
-import {DjangoColumnDef, DjangoTableComponent} from "./django-table/django-table.component";
+import {
+    CellComponent,
+    DjangoCellDef,
+    DjangoColumnDef,
+    DjangoTableComponent
+} from "./django-table/django-table.component";
 import {RouterModule} from "@angular/router";
 
 @NgModule({
@@ -15,16 +20,20 @@ import {RouterModule} from "@angular/router";
       MatFormFieldModule,
       MatPaginatorModule,
       MatSortModule,
-      RouterModule
+      RouterModule,
 
   ],
   declarations: [
       DjangoTableComponent,
       DjangoColumnDef,
+      DjangoCellDef,
+
+      CellComponent,
   ],
     exports: [
         DjangoTableComponent,
         DjangoColumnDef,
+        DjangoCellDef,
     ]
 })
 export class DjangoListModule { }

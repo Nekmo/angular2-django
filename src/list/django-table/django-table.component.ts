@@ -1,19 +1,42 @@
 import {
     AfterContentInit,
-    Component,
+    Component, ContentChild,
     ContentChildren, Directive,
-    EventEmitter, forwardRef,
+    EventEmitter,
     Input,
     OnChanges,
     OnInit,
     Output, QueryList,
-    SimpleChanges,
-    ViewChild
+    SimpleChanges, TemplateRef,
+    ViewChild, ViewContainerRef
 } from '@angular/core';
 import {MatInput, MatPaginator, MatSort, MatSortable} from "@angular/material";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Options} from "../../api.service";
 import {isString} from "util";
+
+
+
+@Directive({
+    selector: 'django-render-cell',
+})
+export class CellComponent {
+    constructor(
+        // public _viewContainer: ViewContainerRef.
+    ) {}
+
+    renderCell(cellTemplate, context) {
+        // this._viewContainer.createEmbeddedView(cellTemplate.cell.template, {$implicit: context});
+    }
+
+}
+
+@Directive({
+    selector: '[djangoCellDef]',
+})
+export class DjangoCellDef  {
+  constructor(/** @docs-private */ public template: TemplateRef<any>) { }
+}
 
 
 @Directive({
@@ -25,6 +48,11 @@ export class DjangoColumnDef {
   // @Input('row') row: any;
 
   /** Whether this column should be sticky positioned at the start of the row */
+
+    /** @docs-private */
+  @ContentChild(DjangoCellDef) cell: DjangoCellDef;
+
+
 }
 
 
@@ -227,4 +255,5 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
             this.rowClick.emit(row);
         }
     }
+
 }
