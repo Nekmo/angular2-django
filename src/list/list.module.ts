@@ -4,7 +4,6 @@ import {
     MatTableModule, MatIconModule, MatPaginatorModule, MatFormFieldModule, MatSortModule,
 } from "@angular/material";
 import {
-    CellComponent,
     DjangoCellDef,
     DjangoColumnDef,
     DjangoTableComponent
@@ -27,8 +26,6 @@ import {RouterModule} from "@angular/router";
       DjangoTableComponent,
       DjangoColumnDef,
       DjangoCellDef,
-
-      CellComponent,
   ],
     exports: [
         DjangoTableComponent,

@@ -16,21 +16,6 @@ import {Options} from "../../api.service";
 import {isString} from "util";
 
 
-
-@Directive({
-    selector: 'django-render-cell',
-})
-export class CellComponent {
-    constructor(
-        // public _viewContainer: ViewContainerRef.
-    ) {}
-
-    renderCell(cellTemplate, context) {
-        // this._viewContainer.createEmbeddedView(cellTemplate.cell.template, {$implicit: context});
-    }
-
-}
-
 @Directive({
     selector: '[djangoCellDef]',
 })
