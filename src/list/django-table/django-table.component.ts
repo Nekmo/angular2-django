@@ -36,8 +36,44 @@ export class DjangoColumnDef {
 
     /** @docs-private */
   @ContentChild(DjangoCellDef) cell: DjangoCellDef;
+}
 
 
+export class Column {
+    _column: {column?: string, style?: any, label?: string} = {};
+    template: any;
+    columnName: string;
+
+    constructor(_column,
+                private djangoTable) {
+        if(isString(_column)) {
+            this.columnName = _column;
+        } else {
+            this.columnName = _column['column'];
+        }
+    }
+
+    get style() {
+        return this._column['style'] || {};
+    }
+
+    setTemplate(template) {
+        this.template = template;
+    }
+
+    get hasCustomTemplate() {
+        return this.template != undefined;
+    }
+
+    get label() {
+        if(this._column['label']) {
+            return this._column['label'];
+        }
+        if(!this.djangoTable.options) {
+            return
+        }
+        return this.djangoTable.queryset.getLabel(this.columnName);
+    }
 }
 
 
@@ -51,6 +87,7 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
     routerPage: string;
     defaultPageIndex: number = 10;
     options: Options;
+    _columns: Column[] = [];
 
     items: any[] = [];
     params = {};
@@ -87,6 +124,7 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['columns']) {
             this.setColumns();
+            this.setColumnDefs();
         }
     }
 
@@ -94,7 +132,23 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
     }
 
     ngAfterContentInit() {
-        console.log(this.columnDefs);
+        this.setColumnDefs();
+    }
+
+    setColumnDefs() {
+        if(!this.columnDefs) {
+            return
+        }
+        this.columnDefs.forEach((columnDef) => {
+            let column = this.getColumn(columnDef.name);
+            if(column) {
+                column.setTemplate(columnDef);
+            }
+        });
+    }
+
+    getColumn(columnName) {
+        return this._columns.find((column) => column.columnName == columnName)
     }
 
     getCustomColumn(name) {
@@ -109,11 +163,10 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
 
     setColumns() {
         if(!this.columns) {
-            return;
+            return
         }
-        this.displayedColumns = this.columns.map((item) => {
-            return this.getColumn(item);
-        });
+        this._columns = this.columns.map((column) => new Column(column, this));
+        this.displayedColumns = this._columns.map((column) => column.columnName);
     }
 
     // Listen sort change event
@@ -212,26 +265,7 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
         });
     }
 
-    getColumn(item) {
-        if(isString(item)) {
-            return item;
-        }
-        return item['column'];
-    }
-
-    getLabel(name) {
-        if(!isString(name) && name['label']) {
-            return name['label'];
-        }
-        if(!this.options) {
-            return
-        }
-        name = this.getColumn(name);
-        return this.queryset.getLabel(name);
-    }
-
     getValue(row, name) {
-        name = this.getColumn(name);
         return row.getValue(name);
     }
 
