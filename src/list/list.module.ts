@@ -1,7 +1,7 @@
-import { NgModule } from '@angular/core';
+import {ModuleWithProviders, NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
-    MatTableModule, MatIconModule, MatPaginatorModule, MatFormFieldModule, MatSortModule,
+    MatTableModule, MatIconModule, MatPaginatorModule, MatFormFieldModule, MatSortModule, MatInputModule,
 } from "@angular/material";
 import {
     DjangoCellDef,
@@ -9,6 +9,7 @@ import {
     DjangoTableComponent
 } from "./django-table/django-table.component";
 import {RouterModule} from "@angular/router";
+import {DjangoFilterService, DjangoInput} from "./django-filter.service";
 
 @NgModule({
   imports: [
@@ -17,6 +18,7 @@ import {RouterModule} from "@angular/router";
       MatIconModule,
       MatPaginatorModule,
       MatFormFieldModule,
+      MatInputModule,
       MatPaginatorModule,
       MatSortModule,
       RouterModule,
@@ -26,11 +28,29 @@ import {RouterModule} from "@angular/router";
       DjangoTableComponent,
       DjangoColumnDef,
       DjangoCellDef,
+
+      DjangoInput,
+
+      // DjangoFilterService,
   ],
     exports: [
         DjangoTableComponent,
         DjangoColumnDef,
         DjangoCellDef,
+
+        DjangoInput,
+        // DjangoFilterService,
+    ],
+    entryComponents: [
+        DjangoInput,
     ]
 })
-export class DjangoListModule { }
+export class DjangoListModule {
+    static forRoot(): ModuleWithProviders {
+      return {
+        ngModule: DjangoListModule,
+        providers: [ DjangoFilterService ]
+      };
+    }
+
+}

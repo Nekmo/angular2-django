@@ -258,7 +258,6 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
             params['search'] = undefined;
         }
         queryset = queryset.page(params['page'] || 1, params['page_size']);
-        console.log(queryset._queryParams)
         queryset[this.listMethod]().subscribe((items) => {
             this.items = items;
             this.itemsLength = items.count;

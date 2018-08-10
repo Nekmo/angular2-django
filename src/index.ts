@@ -4,6 +4,8 @@ import {HttpClientModule} from "@angular/common/http";
 import {ApiService} from "./api.service";
 
 import {SerializerService} from "./serializer.service";
+import {DynamicComponentComponent, ViewContainerDirective} from "./dynamic-component.component";
+
 
 @NgModule({
     imports: [
@@ -12,10 +14,12 @@ import {SerializerService} from "./serializer.service";
     ],
     declarations: [
         // SerializerService,
-
+        DynamicComponentComponent,
+        ViewContainerDirective,
     ],
     exports: [
         // SerializerService,
+        DynamicComponentComponent,
     ]
 })
 export class DjangoModule {

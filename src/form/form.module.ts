@@ -37,6 +37,9 @@ import {DjangoSearchInputComponent} from "./django-search-input/django-search-in
     exports: [
         DjangoFormComponent,
         DjangoSearchInputComponent,
+    ],
+    entryComponents: [
+        DjangoSearchInputComponent,
     ]
 })
 export class DjangoFormModule { }

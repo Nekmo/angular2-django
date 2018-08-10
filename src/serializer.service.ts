@@ -171,6 +171,10 @@ export class SerializerService {
         return this.getFieldOptions(field)['type'];
     }
 
+    static getType(field) {
+        return this.getNestedSerializer(field);
+    }
+
     save() {
         return this._api.save(this.getPk(), this.getData());
     }
