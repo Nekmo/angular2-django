@@ -50,6 +50,7 @@ export class Column {
             this.columnName = _column;
         } else {
             this.columnName = _column['column'];
+            this._column = _column;
         }
     }
 
@@ -80,7 +81,7 @@ export class Column {
 @Component({
   selector: 'django-table',
   templateUrl: './django-table.component.html',
-  styleUrls: ['./django-table.component.scss']
+  styleUrls: ['./django-table.component.scss'],
 })
 export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit {
 
