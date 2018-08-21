@@ -21,8 +21,7 @@
 
                 <mat-cell *matCellDef="let row" [ngStyle]="column.style">
                     <ng-container *ngIf="column.hasCustomTemplate; else defaultCell">
-                        <ng-container
-                                *ngTemplateOutlet="getCustomColumn(column.columnName).cell.template; context: {$implicit: row}"></ng-container>
+                        <ng-container *ngTemplateOutlet="column.template.cell.template; context: {$implicit: row}"></ng-container>
                     </ng-container>
 
                     <ng-template #defaultCell>
