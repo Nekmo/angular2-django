@@ -14,6 +14,7 @@ import {MatInput, MatPaginator, MatSort, MatSortable} from "@angular/material";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Options} from "../../api.service";
 import {isString} from "util";
+import {FormControl, FormGroup} from "@angular/forms";
 
 
 @Directive({
@@ -99,6 +100,7 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
     @Input() queryset: any;
     @Input() columns: any;
     @Input() listMethod: string = 'all';
+    @Input() filterForm: FormGroup;
     @Output() rowClick: EventEmitter<any> = new EventEmitter<any>();
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -126,6 +128,8 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
         if (changes['columns']) {
             this.setColumns();
             this.setColumnDefs();
+        } else if(changes['filterForm']) {
+            this.filterChangeListener();
         }
     }
 
@@ -160,6 +164,7 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
         this.paramsChangeListener();
         this.sortChangeListener();
         this.pageChangeListener();
+        this.filterChangeListener();
     }
 
     setColumns() {
@@ -219,6 +224,16 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
         });
     }
 
+    filterChangeListener() {
+        // TODO: eliminar anterior subscribe de filterForm.valueChanges
+        if(!this.filterForm) {
+            return
+        }
+        this.filterForm.valueChanges.subscribe(() => {
+            this.setParams(this.filterForm.value);
+        });
+    }
+
     // Set router parameter
     setParam(key, value) {
         let data = {};
@@ -254,6 +269,11 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
             queryset = queryset.orderBy(params['ordering']);
             params['ordering'] = undefined;
         }
+        this.getFilterNames().forEach((key) => {
+            let filter = {};
+            filter[key] = params[key];
+            queryset = queryset.filter(filter);
+        });
         if(params['search']){
             queryset = queryset.search(params['search']);
             params['search'] = undefined;
@@ -263,6 +283,13 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
             this.items = items;
             this.itemsLength = items.count;
         });
+    }
+
+    getFilterNames() {
+        if(!this.filterForm) {
+            return [];
+        }
+        return Object.keys(this.filterForm.controls);
     }
 
     getValue(row, name) {
