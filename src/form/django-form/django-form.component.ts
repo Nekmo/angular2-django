@@ -95,6 +95,7 @@ export class DjangoFormComponent implements OnInit, OnChanges {
     @Input() update: 'PUT' | 'PATCH' = 'PUT';
     @Input() inline: boolean = false;
     @Input() buttons: boolean = true;
+    @Input() populate: {};
 
     constructor(public formBuilder: FormBuilder,
                 public snackBar: MatSnackBar) { }
@@ -121,6 +122,8 @@ export class DjangoFormComponent implements OnInit, OnChanges {
                     let value: any = '';
                     if(this.instance) {
                         value = this.instance.getValue(field['field']);
+                    } else if(this.populate && this.populate[field['field']]) {
+                        value = this.populate[field['field']];
                     }
                     controlsConfig[field['field']] = getControlConfig(item, value);
                     return field;
