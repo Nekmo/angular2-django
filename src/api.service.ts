@@ -50,15 +50,16 @@ export function getCookie(name) {
 // })
 export class ApiService {
 
+    http: HttpClient;
     serializer: any;
     url: string;
     contentType: string;
     _queryParams = {};
     _options: Options;
 
-    constructor(public http: HttpClient,
-                public injector: Injector) { }
-
+    constructor(public injector: Injector) {
+        this.http = injector.get(HttpClient);
+    }
 
     get(pk) {
         return this.pipeHttp(this.http.get(this.getUrlDetail(pk)));
@@ -165,7 +166,7 @@ export class ApiService {
     }
 
     copy() {
-        let api = new this['__proto__'].constructor(this.http, this.injector);
+        let api = new this['__proto__'].constructor(this.injector);
         api._queryParams = Object.assign({}, this._queryParams);
         return api;
     }
