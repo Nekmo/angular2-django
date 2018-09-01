@@ -52,6 +52,7 @@ export class ApiService {
 
     serializer: any;
     url: string;
+    contentType: string;
     _queryParams = {};
     _options: Options;
 
