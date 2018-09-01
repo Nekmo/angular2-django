@@ -28,7 +28,7 @@ export class DjangoSearchInputComponent implements OnInit {
     @Input() placeholder: string;
 
     //current form control input. helpful in validating and accessing form control
-    @Input() c:FormControl = new FormControl();
+    @Input() formControl: FormControl = new FormControl();
     @Input() textInput: boolean = false;
 
     @Output() selectedItem: EventEmitter<any> = new EventEmitter<any>();
@@ -52,10 +52,10 @@ export class DjangoSearchInputComponent implements OnInit {
     ngOnInit() {
         this.input = this.input || {};  // TODO: input no requerido
         // RESET the custom input form control UI when the form control is RESET
-        this.c.valueChanges.subscribe(
+        this.formControl.valueChanges.subscribe(
             () => {
                 // check condition if the form control is RESET
-                if (this.c.value == "" || this.c.value == null || this.c.value == undefined) {
+                if (this.formControl.value == "" || this.formControl.value == null || this.formControl.value == undefined) {
                     // this.innerValue = "";
                     // this.inputRef.nativeElement.value = "";
                 }
@@ -84,12 +84,12 @@ export class DjangoSearchInputComponent implements OnInit {
         //reset errors
         this.errors = [];
         //setting, resetting error messages into an array (to loop) and adding the validation messages to show below the field area
-        for (var key in this.c.errors) {
-            if (this.c.errors.hasOwnProperty(key)) {
+        for (var key in this.formControl.errors) {
+            if (this.formControl.errors.hasOwnProperty(key)) {
                 if(key === "required"){
                     this.errors.push("This field is required");
                 }else{
-                    this.errors.push(this.c.errors[key]);
+                    this.errors.push(this.formControl.errors[key]);
                 }
             }
         }
@@ -140,7 +140,7 @@ export class DjangoSearchInputComponent implements OnInit {
             this.lastTerm = term;
         });
         if(this.textInput) {
-            this.c.patchValue(this.searchInput.value);
+            this.formControl.patchValue(this.searchInput.value);
             this.selectedItem.emit(null);
         }
     }
@@ -173,7 +173,7 @@ export class DjangoSearchInputComponent implements OnInit {
         if(this.textInput) {
             value = value.getName();
         }
-        this.c.patchValue(value);
+        this.formControl.patchValue(value);
     }
 
     setInputText(value) {
@@ -195,7 +195,7 @@ export class DjangoSearchInputComponent implements OnInit {
         this.setLastOption(null);
         this.searchInput.value = '';
         this.searchWord('');
-        this.c.patchValue((this.textInput ? '' : null));
+        this.formControl.patchValue((this.textInput ? '' : null));
         if(open) {
             setTimeout(() => {
                 this.autoTrigger.openPanel();

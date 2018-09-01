@@ -63,7 +63,7 @@
 
             <django-search-input *ngIf="input['widget'] == 'search-input'" [input]="input"
                                  style="width: 100%;"
-                                 [c]="form.controls[input['field']]" [textInput]="input['textInput'] || false"
+                                 [formControl]="form.controls[input['field']]" [textInput]="input['textInput'] || false"
                                  (selectedItem)="(input['selectedItem'] ? input['selectedItem']($event) : undefined)"
                                  ngClass="{{ input['class'] }}" [queryset]="input['queryset']"
                                  [form]="form" formControlName="{{ input['field'] }}"></django-search-input>

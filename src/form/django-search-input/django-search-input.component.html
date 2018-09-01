@@ -2,9 +2,9 @@
     <!-- (blur)="onChange($event, input.value)" -->
     <input matInput placeholder="{{ input['placeholder'] || placeholder }}" type="{{ input['type'] }}"
            [matAutocomplete]="auto"
-            #searchInput (keyup)="searchWord(searchInput.value)" (focus)="searchClick();" [disabled]="c.disabled"
+            #searchInput (keyup)="searchWord(searchInput.value)" (focus)="searchClick();" [disabled]="formControl.disabled"
             (blur)="focusOut()">
-    <button mat-button *ngIf="searchInput.value && !c.disabled && !textInput" matSuffix mat-icon-button
+    <button mat-button *ngIf="searchInput.value && !formControl.disabled && !textInput" matSuffix mat-icon-button
             aria-label="Clear" (click)="clear()">
       <mat-icon>close</mat-icon>
     </button>

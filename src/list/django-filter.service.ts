@@ -63,7 +63,7 @@ export class DjangoFilter {
                 }
                 form[fieldName] = new FormControl('');
                 data['formControl'] = form[fieldName];
-                // data['c'] = form[fieldName];
+                // data['formControl'] = form[fieldName];
                 return new DynamicItem(component, data);
                 // return component;
             });
