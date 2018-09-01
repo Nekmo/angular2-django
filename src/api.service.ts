@@ -45,6 +45,13 @@ export function getCookie(name) {
 }
 
 
+export function Api(serializer) {
+    return (constructor: Function) => {
+        serializer['api_class'] = constructor;
+    }
+}
+
+
 // @Injectable({
 //     providedIn: 'root'
 // })
