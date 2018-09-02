@@ -19,8 +19,10 @@
             </mat-form-field>
 
             <mat-form-field fxFlex="{{ input['flex'] }}" ngClass="{{ input['class'] }}"
+                            [appearance]="input['appearance'] || 'legacy'"
                             *ngIf="input['widget'] == 'textarea'">
                 <textarea matInput placeholder="{{ input['placeholder'] }}" mat-autosize
+                          [rows]="input['rows'] || 3"
                           formControlName="{{ input['field'] }}"></textarea>
                 <mat-error *ngIf="form.controls[input['field']].invalid">
                     {{getErrorMessage(form.controls[input['field']])}}
