@@ -13,9 +13,9 @@ import {
 import {MatInput, MatPaginator, MatSort, MatSortable} from "@angular/material";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Options} from "../../api.service";
+import {SerializerService} from "../../serializer.service";
 import {isString} from "util";
 import {FormControl, FormGroup} from "@angular/forms";
-
 
 @Directive({
     selector: '[djangoCellDef]',
@@ -229,7 +229,10 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
         if(!this.filterForm) {
             return
         }
-        this.filterForm.valueChanges.subscribe(() => {
+        this.filterForm.valueChanges
+            .debounceTime(200)
+            .distinctUntilChanged()
+            .subscribe(() => {
             this.setParams(this.filterForm.value);
         });
     }
@@ -245,6 +248,11 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
     }
 
     setParams(newParams) {
+        Object.keys(newParams).forEach((key) => {
+            if(newParams[key] instanceof SerializerService) {
+                newParams[key] = newParams[key]['id'];
+            }
+        });
         let params = Object.assign({}, this.params);
         params = Object.assign(params, newParams);
         if(params['page_size'] && params['page_size'] == this.defaultPageIndex) {
