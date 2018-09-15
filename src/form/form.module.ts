@@ -9,6 +9,7 @@ import {
     MatSelectModule, MatSnackBarModule, MatStepperModule
 } from "@angular/material";
 import {DjangoSearchInputComponent} from "./django-search-input/django-search-input.component";
+import {DjangoFormFieldComponent} from "./django-form-field/django-form-field.component";
 
 @NgModule({
     imports: [
@@ -33,13 +34,16 @@ import {DjangoSearchInputComponent} from "./django-search-input/django-search-in
     declarations: [
         DjangoFormComponent,
         DjangoSearchInputComponent,
+        DjangoFormFieldComponent,
     ],
     exports: [
         DjangoFormComponent,
         DjangoSearchInputComponent,
+        DjangoFormFieldComponent,
     ],
     entryComponents: [
         DjangoSearchInputComponent,
+        DjangoFormFieldComponent,
     ]
 })
 export class DjangoFormModule { }
