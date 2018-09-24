@@ -93,16 +93,25 @@ export class SerializerService {
                 return
             }
             if(options['isSerializer'] && options['many']) {
-                data[name] = data[name].map((item) => new type(this._api, item));
+                // TODO: no es su propio serializer
+                data[name] = data[name].map((item) => new type(this.getSerializerApi(type), item));
             } else if(options['isSerializer']) {
                 // TODO: no es su propio serializer
-                data[name] = new type(this._api, data[name]);
+                data[name] = new type(this.getSerializerApi(type), data[name]);
             } else if(type == Date) {
                 data[name] = new type(data[name]);
             } else if(type) {
                 data[name] = type(data[name]);
             }
         })
+    }
+
+    getSerializerApi(serializer) {
+        const api_class = serializer['api_class'];
+        if(!api_class) {
+            throw Error(`api_class is not available in ${serializer}`)
+        }
+        return this._api.injector.get(api_class);
     }
 
     getData() {

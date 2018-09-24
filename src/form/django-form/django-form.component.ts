@@ -173,7 +173,7 @@ export class DjangoFormComponent implements OnInit, OnChanges {
         return data;
     }
 
-    onFormSubmit(data) {
+    onFormSubmit(data, onSuccess=null) {
         Object.entries(data).forEach(([key, value]) => {
             if(value && value['getData']) {
                 data[key] = value['getData']();
@@ -200,11 +200,13 @@ export class DjangoFormComponent implements OnInit, OnChanges {
                 return Observable.empty();
             }))
             .subscribe(() => {
-            this.snackBar.open('Success', 'Close', {
-                duration: 3000,
+                this.snackBar.open('Success', 'Close', {
+                    duration: 3000,
+                });
+                if(onSuccess) {
+                    onSuccess();
+                }
             });
-
-        });
     }
 
 }
