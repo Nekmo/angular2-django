@@ -13,9 +13,9 @@ import {
 import {MatInput, MatPaginator, MatSort, MatSortable} from "@angular/material";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Options} from "../../api.service";
+import {SerializerService} from "../../serializer.service";
 import {isString} from "util";
 import {FormControl, FormGroup} from "@angular/forms";
-
 
 @Directive({
     selector: '[djangoCellDef]',
@@ -101,11 +101,12 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
     @Input() columns: any;
     @Input() listMethod: string = 'all';
     @Input() filterForm: FormGroup;
+    @Input() searchControl: FormControl;
+
     @Output() rowClick: EventEmitter<any> = new EventEmitter<any>();
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
-    @ViewChild(MatInput) searchInput: MatInput;
 
     @ContentChildren(DjangoColumnDef) columnDefs: QueryList<DjangoColumnDef>;
 
@@ -165,6 +166,7 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
         this.sortChangeListener();
         this.pageChangeListener();
         this.filterChangeListener();
+        this.searchChangeListener();
     }
 
     setColumns() {
@@ -195,6 +197,14 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
 
     }
 
+    // Listen sort change event
+    searchChangeListener() {
+        this.searchControl.valueChanges.debounceTime(200).subscribe(() => {
+            this.setParams({'search': this.searchControl.value});
+        });
+
+    }
+
     // Listen params change event
     paramsChangeListener() {
         this.activatedRoute.queryParams.subscribe(params => {
@@ -202,7 +212,9 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
             let originalParams = this.params;
             this.params = params;
             params = Object.assign({}, params);
-            // this.searchInput.value = params['search'] || '';
+            if(this.searchControl) {
+                this.searchControl.setValue(params['search'] || '');
+            }
             this.paginator.pageIndex = parseInt(params['page'] || '1') - 1;
             this.paginator.pageSize = parseInt(params['page_size'] || this.defaultPageIndex);
             if(params['ordering'] && this.firstLoad) {
@@ -229,7 +241,10 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
         if(!this.filterForm) {
             return
         }
-        this.filterForm.valueChanges.subscribe(() => {
+        this.filterForm.valueChanges
+            .debounceTime(200)
+            .distinctUntilChanged()
+            .subscribe(() => {
             this.setParams(this.filterForm.value);
         });
     }
@@ -245,6 +260,11 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
     }
 
     setParams(newParams) {
+        Object.keys(newParams).forEach((key) => {
+            if(newParams[key] instanceof SerializerService) {
+                newParams[key] = newParams[key]['id'];
+            }
+        });
         let params = Object.assign({}, this.params);
         params = Object.assign(params, newParams);
         if(params['page_size'] && params['page_size'] == this.defaultPageIndex) {
