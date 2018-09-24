@@ -199,6 +199,9 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
 
     // Listen sort change event
     searchChangeListener() {
+        if(!this.searchControl) {
+            return;
+        }
         this.searchControl.valueChanges.debounceTime(200).subscribe(() => {
             this.setParams({'search': this.searchControl.value});
         });
