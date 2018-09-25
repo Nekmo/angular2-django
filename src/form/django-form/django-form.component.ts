@@ -96,6 +96,8 @@ export class DjangoFormComponent implements OnInit, OnChanges {
     @Input() inline: boolean = false;
     @Input() buttons: boolean = true;
     @Input() populate: {};
+    @Input() translationsField: string = 'translations';
+    @Input() translations: {name: string, code: string}[] = [];
 
     constructor(public formBuilder: FormBuilder,
                 public snackBar: MatSnackBar) { }
@@ -107,10 +109,37 @@ export class DjangoFormComponent implements OnInit, OnChanges {
         this.initForm();
     }
 
+    getFields() {
+        let fields = this.fields;
+        for(let field of this.fields) {
+            let fieldName = (isString(field) ? field : field['field']);
+            if(!fieldName.startsWith(`${this.translationsField}__`)) {
+                return;
+            }
+            const index = fields.indexOf(field);
+            fields.splice(index, 1);
+            for(let translation of this.translations) {
+                let parts = fieldName.split('__');
+                parts.splice(1, 0, translation['code']);
+                fieldName = parts.join('__');
+
+                let field_ = (isString(fieldName) ? fieldName : field);
+                if(isString(fieldName)) {
+                    field_ = fieldName;
+                } else {
+                    field_ = field.slice();
+                    field_['field'] = fieldName
+                }
+                fields.splice(index, 0, field_);
+            }
+        }
+        return fields;
+    }
+
     initForm() {
         let controlsConfig = {};
         this.api.options().subscribe(() => {
-            this.schema = this.fields.map((itemsArray) => {
+            this.schema = this.getFields().map((itemsArray) => {
                 if(!isArray(itemsArray)){
                     itemsArray = [itemsArray];
                 }
