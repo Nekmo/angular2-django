@@ -1,13 +1,14 @@
 import {
-    Component, ContentChild,
+    Component, ComponentFactoryResolver, ContentChild,
     ContentChildren,
     Directive,
-    ElementRef,
+    ElementRef, Input,
     OnInit,
     QueryList,
     ViewChild,
     ViewContainerRef
 } from '@angular/core';
+import {DjangoformControlItem} from "../django-form.service";
 
 
 /** Interface used to provide an outlet for rows to be inserted into. */
@@ -33,7 +34,10 @@ export class DataDjangoFormOutlet implements DjangoOutlet {
  * @docs-private
  */
 export const DJANGO_FORM_FIELD_TEMPLATE = `
-<ng-container djangoFormOutlet></ng-container>
+<mat-form-field>
+    <ng-container djangoFormOutlet></ng-container>
+    <mat-hint *ngIf="helpText">{{ helpText }}</mat-hint>
+</mat-form-field>
 `;
 
 
@@ -44,13 +48,29 @@ export const DJANGO_FORM_FIELD_TEMPLATE = `
 })
 export class DjangoFormFieldComponent implements OnInit {
 
-    @ViewChild(DataDjangoFormOutlet) _rowOutlet: DataDjangoFormOutlet;
+    @Input() djangoFormControl: DjangoformControlItem;
+    @ViewChild(DataDjangoFormOutlet) template: DataDjangoFormOutlet;
 
     // @ContentChild(DjangoColumnDef) formField: any;
 
-    constructor() { }
+    constructor(private componentFactoryResolver: ComponentFactoryResolver) { }
 
-    ngOnInit() {
+    addComponent() {
+        let componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.djangoFormControl.component);
+
+        let viewContainerRef = this.template.viewContainer;
+        viewContainerRef.clear();
+
+        let componentRef = viewContainerRef.createComponent(componentFactory);
+
+        Object.keys(this.djangoFormControl.data).forEach((key) => {
+            (<any>componentRef.instance)[key] = this.djangoFormControl.data[key];
+        });
+
+    }
+
+    ngOnInit(): void {
+        this.addComponent();
     }
 
 }

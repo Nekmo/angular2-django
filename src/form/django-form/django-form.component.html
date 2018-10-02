@@ -5,11 +5,11 @@
     <div fxLayoutAlign="start start"  *ngFor="let row of schema">
 
         <ng-container *ngFor="let input of row">
-            <h2 *ngIf="input['widget'] == 'title'">{{ input['text'] }}</h2>
+            <h2 *ngIf="input['djangoFormControl'] == 'title'">{{ input['text'] }}</h2>
 
             <mat-form-field fxFlex="{{ input['flex'] }}" ngClass="{{ input['class'] }}"
                             [ngStyle]="{'display': input['display']}"
-                            *ngIf="input['widget'] == 'input'">
+                            *ngIf="input['djangoFormControl'] == 'input'">
                 <input matInput placeholder="{{ input['placeholder'] }}" type="{{ input['type'] }}"
                        formControlName="{{ input['field'] }}">
                 <mat-error *ngIf="form.controls[input['field']].invalid">
@@ -20,7 +20,7 @@
 
             <mat-form-field fxFlex="{{ input['flex'] }}" ngClass="{{ input['class'] }}"
                             [appearance]="input['appearance'] || 'legacy'"
-                            *ngIf="input['widget'] == 'textarea'">
+                            *ngIf="input['djangoFormControl'] == 'textarea'">
                 <textarea matInput placeholder="{{ input['placeholder'] }}" mat-autosize
                           [rows]="input['rows'] || 3"
                           formControlName="{{ input['field'] }}"></textarea>
@@ -30,7 +30,7 @@
             </mat-form-field>
 
             <mat-form-field fxFlex="{{ input['flex'] }}" ngClass="{{ input['class'] }}"
-                            *ngIf="input['widget'] == 'select'">
+                            *ngIf="input['djangoFormControl'] == 'select'">
                 <mat-select placeholder="{{ input['placeholder'] }}"
                             formControlName="{{ input['field'] }}">
                     <mat-option *ngFor="let choice of (input['choices'] || [])"
@@ -44,7 +44,7 @@
             </mat-form-field>
 
             <mat-form-field fxFlex="{{ input['flex'] }}"  ngClass="{{ input['class'] }}"
-                            *ngIf="input['widget'] == 'datetime'">
+                            *ngIf="input['djangoFormControl'] == 'datetime'">
                 <input matInput [matDatepicker]="picker" placeholder="{{ input['placeholder'] }}"
                        formControlName="{{ input['field'] }}" />
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -54,7 +54,7 @@
                 </mat-error>
             </mat-form-field>
 
-            <div *ngIf="input['widget'] == 'checkbox'" fxFlex="{{ input['flex'] }}" class="mat-form-checkbox">
+            <div *ngIf="input['djangoFormControl'] == 'checkbox'" fxFlex="{{ input['flex'] }}" class="mat-form-checkbox">
                 <mat-checkbox formControlName="{{ input['field'] }}" [indeterminate]="input['null']">
                     {{ input['placeholder'] }}
                 </mat-checkbox>
@@ -63,7 +63,7 @@
                 </mat-error>
             </div>
 
-            <django-search-input *ngIf="input['widget'] == 'search-input'" [input]="input"
+            <django-search-input *ngIf="input['djangoFormControl'] == 'search-input'" [input]="input"
                                  style="width: 100%;"
                                  [formControl]="form.controls[input['field']]" [textInput]="input['textInput'] || false"
                                  (selectedItem)="(input['selectedItem'] ? input['selectedItem']($event) : undefined)"

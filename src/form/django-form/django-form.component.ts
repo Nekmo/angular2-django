@@ -26,12 +26,12 @@ function getField(data, api){
     if(!data['field']) {
         return
     }
-    if(data['widget'] === undefined) {
+    if(data['djangoFormControl'] === undefined) {
         let options = api.serializer.getFieldOptions(data['field']);
         let type = options['typeName'];
         Object.assign(data, TYPE_WIDGETS[type] || {});
         if(options['isSerializer']) {
-            data['widget'] = 'search-input';
+            data['djangoFormControl'] = 'search-input';
             let apiClass = options['type']['api_class'];
             data['queryset'] = data['queryset'] || api.injector.get(apiClass);
         }
@@ -39,17 +39,17 @@ function getField(data, api){
     if(data['required'] === undefined) {
         data['required'] = true;
     }
-    if(data['widget'] === undefined) {
-        data['widget'] = "input";
+    if(data['djangoFormControl'] === undefined) {
+        data['djangoFormControl'] = "input";
     }
-    if(data['widget'] == "input" && data['type'] === undefined) {
+    if(data['djangoFormControl'] == "input" && data['type'] === undefined) {
         data['type'] = "text";
     }
-    if(data['widget'] == "input" && data['type'] == 'hidden') {
+    if(data['djangoFormControl'] == "input" && data['type'] == 'hidden') {
         data['type'] = "text";
         data['display'] = "none";
     }
-    if(data['widget'] == "select" && !data['choices']) {
+    if(data['djangoFormControl'] == "select" && !data['choices']) {
         data['choices'] =  api.getChoices(data['field']);
         data['value_key'] = 'value';
     }
