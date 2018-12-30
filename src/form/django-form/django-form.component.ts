@@ -113,7 +113,7 @@ export class DjangoFormComponent implements OnInit, OnChanges {
         let fields = this.fields;
         for(let field of this.fields) {
             let fieldName = (isString(field) ? field : field['field']);
-            if(!fieldName.startsWith(`${this.translationsField}__`)) {
+            if(fieldName && !fieldName.startsWith(`${this.translationsField}__`)) {
                 return;
             }
             const index = fields.indexOf(field);
