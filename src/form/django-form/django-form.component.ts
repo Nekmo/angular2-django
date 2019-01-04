@@ -56,8 +56,8 @@ function getField(data, api){
     if(!data['flex']) {
         data['flex'] = 100;
     }
-    data['placeholder'] = api.getLabel(data['field']);
-    data['help_text'] = api.getHelpText(data['field']);
+    data['placeholder'] = data['placeholder'] || api.getLabel(data['field']);
+    data['help_text'] = data['placeholder'] || api.getHelpText(data['field']);
     return data;
 }
 
@@ -110,26 +110,27 @@ export class DjangoFormComponent implements OnInit, OnChanges {
     }
 
     getFields() {
-        let fields = this.fields;
+        let fields = Object.assign([], this.fields);
         for(let field of this.fields) {
             let fieldName = (isString(field) ? field : field['field']);
-            if(fieldName && !fieldName.startsWith(`${this.translationsField}__`)) {
-                return;
+            if(!fieldName || !fieldName.startsWith(`${this.translationsField}__`)) {
+                continue;
             }
             const index = fields.indexOf(field);
             fields.splice(index, 1);
             for(let translation of this.translations) {
                 let parts = fieldName.split('__');
                 parts.splice(1, 0, translation['code']);
-                fieldName = parts.join('__');
+                let transFieldName = parts.join('__');
 
-                let field_ = (isString(fieldName) ? fieldName : field);
-                if(isString(fieldName)) {
-                    field_ = fieldName;
-                } else {
-                    field_ = field.slice();
-                    field_['field'] = fieldName
-                }
+                let field_ = (isString(field) ? {} : Object.assign({}, field));
+                field_['field'] = transFieldName;
+                // if(isString(fieldName)) {
+                //     field_ = {'field': fieldName};
+                // } else {
+                //     field_ = field.slice();
+                //     field_['field'] = fieldName
+                // }
                 fields.splice(index, 0, field_);
             }
         }
