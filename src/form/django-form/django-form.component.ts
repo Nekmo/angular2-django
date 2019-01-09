@@ -57,7 +57,7 @@ function getField(data, api){
         data['flex'] = 100;
     }
     data['placeholder'] = data['placeholder'] || api.getLabel(data['field']);
-    data['help_text'] = data['placeholder'] || api.getHelpText(data['field']);
+    data['help_text'] = data['help_text'] || api.getHelpText(data['field']);
     return data;
 }
 
