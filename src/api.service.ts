@@ -182,20 +182,26 @@ export class ApiService {
         return this.url == other.url && isEqual(this._queryParams, other._queryParams);
     }
 
-    getOptionField(name) {
+    getOptionField(name, defaultValue?) {
         if(!this.constructor['_options']) {
             return
         }
         let data = this.constructor['_options'].actions.POST;
-        name.split('__').forEach((item, i, array) => {
+
+        let array = name.split('__');
+        // name.split('__').forEach((item, i, array) => {
+        for (let i = 0; i < array.length; i++) {
+            let item = array[i];
             data = data[item];
-            if(data === undefined) {
+            if(data === undefined && defaultValue === undefined) {
                 throw new Error(`Invalid item ${item} on ${name} query`);
+            } else if(data === undefined) {
+                return defaultValue;
             }
             if(data['type'] == 'nested object' && i !== array.length - 1) {
                 data = data['children'];
             }
-        });
+        }
         return data;
     }
 
@@ -204,7 +210,7 @@ export class ApiService {
     }
 
     getHelpText(name) {
-        return (this.getOptionField(name) || {})['help_text'];
+        return (this.getOptionField(name, null) || {})['help_text'];
     }
 
     getChoices(name) {
