@@ -136,6 +136,10 @@ export class SerializerService {
     getValue(name) {
         let value = this;
         name.split('__').forEach((item) => {
+            if(value === undefined) {
+                // TODO: Nested item is not defined. Maybe a empty translation. Improve required.
+                return;
+            }
             value = value[item];
             if((value || {})['type'] == 'nested object') {
                 value = value['children'];
