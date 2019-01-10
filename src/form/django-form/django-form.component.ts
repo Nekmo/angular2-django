@@ -125,6 +125,9 @@ export class DjangoFormComponent implements OnInit, OnChanges {
 
                 let field_ = (isString(field) ? {} : Object.assign({}, field));
                 field_['field'] = transFieldName;
+                if(field_['placeholder']) {
+                    field_['placeholder'] = `${field_['placeholder']} (${translation.name})`;
+                }
                 // if(isString(fieldName)) {
                 //     field_ = {'field': fieldName};
                 // } else {
