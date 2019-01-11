@@ -128,6 +128,7 @@ export class DjangoFormComponent implements OnInit, OnChanges {
                 if(field_['placeholder']) {
                     field_['placeholder'] = `${field_['placeholder']} (${translation.name})`;
                 }
+                field_['required'] = false;
                 // if(isString(fieldName)) {
                 //     field_ = {'field': fieldName};
                 // } else {
