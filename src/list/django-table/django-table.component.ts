@@ -87,7 +87,7 @@ export class Column {
 export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit {
 
     routerPage: string;
-    defaultPageIndex: number = 10;
+    defaultPageIndex: number = 20;
     options: Options;
     _columns: Column[] = [];
 
