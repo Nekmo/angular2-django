@@ -188,7 +188,13 @@ export class SerializerService {
         return this.getNestedSerializer(field);
     }
 
+    patch(data) {
+        // TODO: este método se eliminará en un futuro. Sólo usar patch.
+        return this._api.save(this.getPk(), data);
+    }
+
     save() {
+        // TODO: getData es conveniente que sólo envíe la información que haya cambiado.
         return this._api.save(this.getPk(), this.getData());
     }
 

@@ -77,7 +77,11 @@ export class ApiService {
     }
 
     save(pk, data) {
-        return this.pipeHttp(this.http.put(this.getUrlDetail(pk), data, this.defaultHttpOptions()));
+        if(pk) {
+            return this.patch(pk, data);
+        } else {
+            return this.create(data);
+        }
     }
 
     patch(pk, data) {
