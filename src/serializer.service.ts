@@ -99,7 +99,7 @@ export class SerializerService {
                 // TODO: no es su propio serializer
                 data[name] = new type(this.getSerializerApi(type), data[name]);
             } else if(type == Date) {
-                data[name] = new type(data[name]);
+                data[name] = (data[name] ? new type(data[name]) : data[name]);
             } else if(type) {
                 data[name] = type(data[name]);
             }
