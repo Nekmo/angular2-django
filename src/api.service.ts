@@ -134,6 +134,9 @@ export class ApiService {
     }
 
     filter(params) {
+        if(!params) {
+            return this;
+        }
         let item = this.copy();
         item.setParams(params);
         return item;
