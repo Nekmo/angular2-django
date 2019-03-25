@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "declaration": true,
-    "module": "es2015",
+    "module": "es2018",
     "target": "es5",
     "baseUrl": ".",
     "stripInternal": true,
@@ -11,7 +11,7 @@
     "outDir": "../build",
     "rootDir": ".",
     "lib": [
-      "es2015",
+      "es2018",
       "dom"
     ],
     "skipLibCheck": true,
