@@ -19,7 +19,7 @@
   },
   "angularCompilerOptions": {
     "annotateForClosureCompiler": true,
-    "strictMetadataEmit": true,
+    "strictMetadataEmit": false,
     "skipTemplateCodegen": true,
     "flatModuleOutFile": "django.js",
     "flatModuleId": "angular-django"
