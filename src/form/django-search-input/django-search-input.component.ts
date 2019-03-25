@@ -44,7 +44,7 @@ export class DjangoSearchInputComponent implements OnInit {
     private innerValue: any = '';
     private lastTerm: string;
     errors: any[];
-    private items;
+    public items;
     private lastOption;
 
     constructor() { }
@@ -129,7 +129,7 @@ export class DjangoSearchInputComponent implements OnInit {
     registerOnTouched(fn: any) {
 
     }
-    
+
     searchWord(term){
         if(term == this.lastTerm) {
             return;
