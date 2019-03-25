@@ -87,7 +87,7 @@ export class SerializerService {
             // Instance is null on model
             return null
         }
-        Object.entries(fields).forEach(([name, options]) => {
+        Object['entries'](fields).forEach(([name, options]) => {
             let type = options['type'];
             if(data[name] === undefined) {
                 return
