@@ -41,9 +41,10 @@ export class DjangoColumnDef {
 
 
 export class Column {
-    _column: {column?: string, style?: any, label?: string} = {};
+    _column: {column?: string, style?: any, label?: string, sort?: boolean} = {};
     template: any;
     columnName: string;
+    sort: boolean = true;
 
     constructor(_column,
                 private djangoTable) {
@@ -52,6 +53,7 @@ export class Column {
         } else {
             this.columnName = _column['column'];
             this._column = _column;
+            this.sort = (_column['sort'] === undefined ? true : _column['sort']);
         }
     }
 

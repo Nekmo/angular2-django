@@ -14,7 +14,7 @@
 
             <!-- ID Column -->
             <ng-container [matColumnDef]="column.columnName" *ngFor="let column of _columns">
-                <mat-header-cell *matHeaderCellDef mat-sort-header
+                <mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!column.sort"
                                  [ngStyle]="column.style">
                     {{ column.label }}
                 </mat-header-cell>
