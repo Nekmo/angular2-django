@@ -243,4 +243,7 @@ export class DjangoFormComponent implements OnInit, OnChanges {
             });
     }
 
+    resetForm() {
+        this.form.reset();
+    }
 }
