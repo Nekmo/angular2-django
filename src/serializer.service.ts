@@ -89,7 +89,7 @@ export class SerializerService {
         }
         Object['entries'](fields).forEach(([name, options]) => {
             let type = options['type'];
-            if(data[name] === undefined) {
+            if(data[name] === undefined || data[name] === null) {
                 return
             }
             if(options['isSerializer'] && options['many']) {
