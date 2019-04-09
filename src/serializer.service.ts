@@ -114,13 +114,17 @@ export class SerializerService {
         return this._api.injector.get(api_class);
     }
 
-    getData() {
+    getData(item = null) {
+        item = item || this;
         let newData = {};
-        Object.keys(this).forEach((key) => {
+        Object.keys(item).forEach((key) => {
             if(key.startsWith('_')) {
                 return;
             }
-            let value = this[key];
+            let value = item[key];
+            if(Array.isArray(value)) {
+                value = value.map((x) => this.getData(x), value);
+            }
             if(value && value['getData']) {
                 value = value['getData']();
             }
