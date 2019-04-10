@@ -69,6 +69,8 @@
                                  (selectedItem)="(input['selectedItem'] ? input['selectedItem']($event) : undefined)"
                                  ngClass="{{ input['class'] }}" [queryset]="input['queryset']"
                                  [form]="form" formControlName="{{ input['field'] }}"></django-search-input>
+            <dynamic-component [config]="input['config']"
+                               *ngIf="input['widget'] == 'dynamic-component'" ></dynamic-component>
         </ng-container>
     </div>
     <div class="pt-20" *ngIf="buttons">

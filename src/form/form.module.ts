@@ -10,6 +10,7 @@ import {
 } from "@angular/material";
 import {DjangoSearchInputComponent} from "./django-search-input/django-search-input.component";
 import {DataDjangoFormOutlet, DjangoFormFieldComponent} from "./django-form-field/django-form-field.component";
+import {DjangoModule} from "../index";
 
 @NgModule({
     imports: [
@@ -29,6 +30,8 @@ import {DataDjangoFormOutlet, DjangoFormFieldComponent} from "./django-form-fiel
         MatDatepickerModule,
         MatSnackBarModule,
         FlexLayoutModule,
+
+        DjangoModule,
 
     ],
     declarations: [
