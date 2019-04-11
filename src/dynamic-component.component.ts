@@ -10,8 +10,9 @@ import {
 } from '@angular/core';
 
 
-export class DynamicItem {
-  constructor(public component: Type<any>, public data: any) {}
+export interface DynamicItem {
+    component: any,
+    data?: any,
 }
 
 

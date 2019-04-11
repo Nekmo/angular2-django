@@ -159,6 +159,9 @@ export class DjangoFormComponent implements OnInit, OnChanges {
                     } else if(this.populate && this.populate[field['field']]) {
                         value = this.populate[field['field']];
                     }
+                    // if(field['widget'] == 'dynamic-component') {
+                    //     field['formControl'] = this.form.controls[field['field']];
+                    // }
                     controlsConfig[field['field']] = getControlConfig(item, value);
                     return field;
                 });
