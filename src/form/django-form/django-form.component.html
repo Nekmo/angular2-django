@@ -1,5 +1,5 @@
 <form [fxLayout]="(inline ? 'row' : 'column')" fxLayoutAlign="start" (ngSubmit)="onFormSubmit(form.value)"
-      fxFlex="1 0 auto" name="form" [formGroup]="form" *ngIf="form">
+      fxFlex="1 1 auto" name="form" [formGroup]="form" *ngIf="form">
 
     <!-- fxLayout="row"  fxFlex="1 0 auto" -->
     <div fxLayoutAlign="start start"  *ngFor="let row of schema">
@@ -69,8 +69,12 @@
                                  (selectedItem)="(input['selectedItem'] ? input['selectedItem']($event) : undefined)"
                                  ngClass="{{ input['class'] }}" [queryset]="input['queryset']"
                                  [form]="form" formControlName="{{ input['field'] }}"></django-search-input>
-            <dynamic-component [config]="{component: input['config']['component'], data: {formControl: form.controls[input['field']]}}"
-                               *ngIf="input['widget'] == 'dynamic-component'" style="width: 100%"></dynamic-component>
+            <dynamic-component [config]="{
+                        component: input['config']['component'],
+                        data: {formControl: form.controls[input['field']],
+                               instance: instance, helpText: input['help_text'], placeholder: input['placeholder']}
+                               }"
+                               *ngIf="input['widget'] == 'dynamic-component' && instance" style="width: 100%"></dynamic-component>
         </ng-container>
     </div>
     <div class="pt-20" *ngIf="buttons">
