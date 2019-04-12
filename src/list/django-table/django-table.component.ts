@@ -45,6 +45,7 @@ export class Column {
     template: any;
     columnName: string;
     sort: boolean = true;
+    link: boolean = true;
 
     constructor(_column,
                 private djangoTable) {
@@ -54,6 +55,9 @@ export class Column {
             this.columnName = _column['column'];
             this._column = _column;
             this.sort = (_column['sort'] === undefined ? true : _column['sort']);
+        }
+        if(this.djangoTable.linkColumns.length) {
+            this.link = this.djangoTable.linkColumns.indexOf(this.columnName) >= 0;
         }
     }
 
@@ -101,6 +105,7 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
 
     @Input() queryset: any;
     @Input() columns: any;
+    @Input() linkColumns: string[] = [];
     @Input() listMethod: string = 'all';
     @Input() filterForm: FormGroup;
     @Input() searchControl: FormControl;
@@ -321,7 +326,19 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
         return row.getValue(name);
     }
 
-    onRowClick(row) {
+    columnIsClicable(event) {
+        if(!this.linkColumns.length) {
+            return
+        }
+        let element: HTMLElement = event.toElement;
+        return this.linkColumns.map((x) => `.mat-column-${x}`)
+            .find((x) => element.closest(x) !== null) !== undefined;
+    }
+
+    onRowClick(row, event) {
+        if(!this.columnIsClicable(event)) {
+            return;
+        }
         if(this.rowClick) {
             this.rowClick.emit(row);
         }
