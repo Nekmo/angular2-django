@@ -328,7 +328,7 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
 
     columnIsClicable(event) {
         if(!this.linkColumns.length) {
-            return
+            return true;
         }
         let element: HTMLElement = event.toElement;
         return this.linkColumns.map((x) => `.mat-column-${x}`)
