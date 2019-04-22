@@ -133,11 +133,13 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes['columns']) {
+        if(changes['columns']) {
             this.setColumns();
             this.setColumnDefs();
         } else if(changes['filterForm']) {
             this.filterChangeListener();
+        } else if(changes['queryset']) {
+            this.loadItems();
         }
     }
 
