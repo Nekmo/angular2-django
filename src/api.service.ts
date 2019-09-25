@@ -1,5 +1,5 @@
 import {Injectable, Injector} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {SerializerService} from "./serializer.service";
 import {map} from "rxjs/operators";
 import {Observable} from "rxjs/Rx";
@@ -151,6 +151,20 @@ export class ApiService {
     setParams(params) {
         Object.keys(params).forEach((key) => (params[key] == undefined) && delete params[key]);
         this._queryParams = Object.assign(this._queryParams, params);
+    }
+
+    _bulk_action(pks, action, data = undefined) {
+        let options = this.defaultHttpOptions();
+        if(pks == null) {
+            options['params'] = this._queryParams;
+        } else {
+            options['params'] = new HttpParams().set('id__in', pks.join(','));
+        }
+        return this.http.post(`${this.getUrlList()}${action}/`, data, options);
+    }
+
+    bulk_update(data, pks = null) {
+        return this._bulk_action(pks, 'bulk_update', data);
     }
 
     options() {

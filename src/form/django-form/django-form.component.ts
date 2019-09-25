@@ -210,14 +210,18 @@ export class DjangoFormComponent implements OnInit, OnChanges {
         return data;
     }
 
-    onFormSubmit(data, onSuccess=null) {
+    getSubmitData(data) {
         Object.entries(data).forEach(([key, value]) => {
             if(value && value['getData']) {
                 data[key] = value['getData']();
             }
         });
         data = lookupsToDicts(data);
-        data = this.processData(data);
+        return this.processData(data);
+    }
+
+    onFormSubmit(data, onSuccess=null) {
+        data = this.getSubmitData(data);
         this.getApiMethod(data)
             .pipe(catchError((err, caught) => {
                 if(!err.error) {
