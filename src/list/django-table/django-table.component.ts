@@ -92,7 +92,6 @@ export class Column {
 })
 export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit {
 
-    routerPage: string;
     defaultPageIndex: number = 20;
     options: Options;
     _columns: Column[] = [];
@@ -123,7 +122,6 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
     ) { }
 
     ngOnInit() {
-        this.routerPage = this.router.url.split('?')[0].split('#')[0];
         this.queryset.options().subscribe((options) => {
             this.options = options;
         });
@@ -290,7 +288,7 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
     }
 
     getRouterPage() {
-        return this.routerPage;
+        return this.router.url.split('?')[0].split('#')[0];
     }
 
     // Retrieve from server items and set it
