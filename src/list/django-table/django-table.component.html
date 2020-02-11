@@ -12,7 +12,22 @@
 
         <mat-table [dataSource]="items" matSort matSortDisableClear>
 
-            <!-- ID Column -->
+            <ng-container matColumnDef="select">
+              <mat-header-cell *matHeaderCellDef>
+                <mat-checkbox (change)="$event ? masterToggle() : null"
+                              [checked]="selection.hasValue() && isAllSelected()"
+                              [indeterminate]="selection.hasValue() && !isAllSelected()">
+                </mat-checkbox>
+              </mat-header-cell>
+              <mat-cell *matCellDef="let row">
+                <mat-checkbox (click)="$event.stopPropagation()"
+                              (change)="$event ? selection.toggle(row.id) : null"
+                              [checked]="selection.isSelected(row.id)">
+                </mat-checkbox>
+              </mat-cell>
+            </ng-container>
+
+
             <ng-container [matColumnDef]="column.columnName" *ngFor="let column of _columns">
                 <mat-header-cell *matHeaderCellDef mat-sort-header
                                  [disabled]="!column.sort"
@@ -34,9 +49,22 @@
             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
             <mat-row mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onRowClick(row, $event)"></mat-row>
         </mat-table>
-
-        <mat-paginator [length]="itemsLength"
-                       [pageSizeOptions]="[10, 20, 50, 100]"></mat-paginator>
+        <div fxLayout="row">
+            <div fxFlex fxLayoutAlign="left center" class="selections-info">
+                <span *ngIf="selection.selected.length > 1 && !selectedAllPages">{{ selection.selected.length }} items selected</span>
+                <span *ngIf="selection.selected.length === 1">One item selected</span>
+                <span *ngIf="selection.selected.length >= pageSize && itemsLength > selection.selected.length && !selectedAllPages"
+                      (click)="setSelectedAllPages()" class="select-all">
+                        (Select {{ itemsLength }} items)
+                </span>
+                <span *ngIf="selectedAllPages">
+                    Selected {{ itemsLength }} items
+                </span>
+            </div>
+            <mat-paginator [length]="itemsLength" [pageSize]="pageSize"
+                           [pageSizeOptions]="[10, 20, 50, 100]">
+            </mat-paginator>
+        </div>
 
 <!--
     </div>

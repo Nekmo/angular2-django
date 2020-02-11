@@ -19,3 +19,17 @@
 .column-link {
     cursor: pointer;
 }
+
+.cdk-column-select {
+    max-width: 64px;
+}
+
+.selections-info {
+    padding-left: 24px;
+}
+
+.select-all {
+    color: #039be5;
+    cursor: pointer;
+    margin-left: 10px;
+}

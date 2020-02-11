@@ -16,6 +16,7 @@ import {Options} from "../../api.service";
 import {SerializerService} from "../../serializer.service";
 import {isString} from "util";
 import {FormControl, FormGroup} from "@angular/forms";
+import {SelectionModel} from '@angular/cdk/collections';
 
 @Directive({
     selector: '[djangoCellDef]',
@@ -101,6 +102,9 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
     firstLoad = true;
     itemsLength: number = 0;
     displayedColumns: string[] = [];
+    selection = new SelectionModel<Element>(true, []);
+    selectedAllPages: boolean = false;
+    pageSize: number = this.defaultPageIndex;
 
     @Input() queryset: any;
     @Input() columns: any;
@@ -108,6 +112,7 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
     @Input() listMethod: string = 'all';
     @Input() filterForm: FormGroup;
     @Input() searchControl: FormControl;
+    @Input() showCheckbox: boolean = true;
 
     @Output() rowClick: EventEmitter<any> = new EventEmitter<any>();
 
@@ -181,7 +186,11 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
             return
         }
         this._columns = this.columns.map((column) => new Column(column, this));
-        this.displayedColumns = this._columns.map((column) => column.columnName);
+        let displayedColumns = this._columns.map((column) => column.columnName);
+        if(this.showCheckbox) {
+            displayedColumns.unshift('select');
+        }
+        this.displayedColumns = displayedColumns;
     }
 
     // Listen sort change event
@@ -313,6 +322,7 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
             this.items = items;
             this.itemsLength = items.count;
         });
+        this.unsetSelectedAllPages();
     }
 
     getFilterNames() {
@@ -344,4 +354,24 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
         }
     }
 
+    isAllSelected() {
+        const numSelected = this.selection.selected.length;
+        return numSelected === this.pageSize;
+    }
+
+    /** Selects all rows if they are not all selected; otherwise clear selection. */
+    masterToggle() {
+        this.isAllSelected() ?
+        this.selection.clear() :
+        this.items.forEach(row => this.selection.select(row.id));
+        this.unsetSelectedAllPages();
+    }
+
+    setSelectedAllPages() {
+        this.selectedAllPages = true;
+    }
+
+    unsetSelectedAllPages() {
+        this.selectedAllPages = false;
+    }
 }

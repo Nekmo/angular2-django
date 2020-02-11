@@ -2,7 +2,9 @@ import {ModuleWithProviders, NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
     MatTableModule, MatIconModule, MatPaginatorModule, MatFormFieldModule, MatSortModule, MatInputModule,
+    MatCheckboxModule,
 } from "@angular/material";
+import {FlexLayoutModule} from "@angular/flex-layout";
 import {
     DjangoCellDef,
     DjangoColumnDef,
@@ -21,8 +23,9 @@ import {DjangoFilterService, DjangoInput} from "./django-filter.service";
       MatInputModule,
       MatPaginatorModule,
       MatSortModule,
+      MatCheckboxModule,
       RouterModule,
-
+      FlexLayoutModule,
   ],
   declarations: [
       DjangoTableComponent,
