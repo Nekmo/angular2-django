@@ -5,7 +5,7 @@ import {Observable} from "rxjs/Rx";
 import {catchError} from "rxjs/internal/operators";
 import {MatSnackBar} from "@angular/material";
 import {lookupsToDicts} from "../../utils";
-
+import {Location} from "@angular/common";
 
 
 export function _(str: string) {
@@ -100,7 +100,9 @@ export class DjangoFormComponent implements OnInit, OnChanges {
     @Input() translations: {name: string, code: string}[] = [];
 
     constructor(public formBuilder: FormBuilder,
-                public snackBar: MatSnackBar) { }
+                public snackBar: MatSnackBar,
+                public location: Location,
+                ) { }
 
     ngOnInit() {
     }
@@ -246,6 +248,8 @@ export class DjangoFormComponent implements OnInit, OnChanges {
                 });
                 if(onSuccess) {
                     onSuccess();
+                } else {
+                    this.location.back();
                 }
             });
     }
