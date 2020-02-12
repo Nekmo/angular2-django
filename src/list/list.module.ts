@@ -10,8 +10,12 @@ import {
     DjangoColumnDef,
     DjangoTableComponent
 } from "./django-table/django-table.component";
+import  {
+    BulkUpdateDialogComponent,
+} from "./bulk-update-dialog/bulk-update-dialog.component"
 import {RouterModule} from "@angular/router";
 import {DjangoFilterService, DjangoInput} from "./django-filter.service";
+import {DjangoFormModule} from "../form/form.module"
 
 @NgModule({
   imports: [
@@ -24,8 +28,11 @@ import {DjangoFilterService, DjangoInput} from "./django-filter.service";
       MatPaginatorModule,
       MatSortModule,
       MatCheckboxModule,
+
       RouterModule,
       FlexLayoutModule,
+
+      DjangoFormModule,
   ],
   declarations: [
       DjangoTableComponent,
@@ -33,6 +40,7 @@ import {DjangoFilterService, DjangoInput} from "./django-filter.service";
       DjangoCellDef,
 
       DjangoInput,
+      BulkUpdateDialogComponent,
 
       // DjangoFilterService,
   ],
@@ -42,10 +50,12 @@ import {DjangoFilterService, DjangoInput} from "./django-filter.service";
         DjangoCellDef,
 
         DjangoInput,
+        BulkUpdateDialogComponent,
         // DjangoFilterService,
     ],
     entryComponents: [
         DjangoInput,
+        BulkUpdateDialogComponent,
     ]
 })
 export class DjangoListModule {

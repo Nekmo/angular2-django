@@ -374,4 +374,15 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
     unsetSelectedAllPages() {
         this.selectedAllPages = false;
     }
+
+    getSelectedQueryset() {
+        if(this.queryset === undefined) {
+            return [];
+        }
+        let queryset = this.queryset.copy();
+        if(!this.selectedAllPages) {
+            queryset._queryParams = {'id__in': this.selection.selected.join(',')};
+        }
+        return queryset;
+    }
 }
