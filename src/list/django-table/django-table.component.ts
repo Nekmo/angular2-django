@@ -318,29 +318,7 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
 
     // Retrieve from server items and set it
     loadItems() {
-        let params = Object.assign({}, this.params);
-        let queryset = this.queryset;
-        if(params['ordering']){
-            queryset = queryset.orderBy(params['ordering']);
-            params['ordering'] = undefined;
-        }
-        this.getFilterNames().forEach((key) => {
-            let filter = {};
-            filter[key] = params[key];
-            queryset = queryset.filter(filter);
-        });
-        if(params['search']){
-            queryset = queryset.search(params['search']);
-            params['search'] = undefined;
-        }
-        queryset = queryset.page(params['page'] || 1, params['page_size']);
-        // Todos los parámetros conocidos los borro para no incluirlos en filter
-        delete params['ordering'];
-        delete params['search'];
-        delete params['page'];
-        delete params['page_size'];
-        // Incluyo el resto de parámetros
-        queryset = queryset.filter(params);
+        let queryset = this.getfilteredQueryset();
         queryset[this.listMethod]().subscribe((items) => {
             this.items = items;
             this.itemsLength = items.count;
@@ -398,11 +376,38 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
         this.selectedAllPages = false;
     }
 
+    getfilteredQueryset() {
+        let params = Object.assign({}, this.params);
+        let queryset = this.queryset;
+        if(params['ordering']){
+            queryset = queryset.orderBy(params['ordering']);
+            params['ordering'] = undefined;
+        }
+        this.getFilterNames().forEach((key) => {
+            let filter = {};
+            filter[key] = params[key];
+            queryset = queryset.filter(filter);
+        });
+        if(params['search']){
+            queryset = queryset.search(params['search']);
+            params['search'] = undefined;
+        }
+        queryset = queryset.page(params['page'] || 1, params['page_size']);
+        // Todos los parámetros conocidos los borro para no incluirlos en filter
+        delete params['ordering'];
+        delete params['search'];
+        delete params['page'];
+        delete params['page_size'];
+        // Incluyo el resto de parámetros
+        queryset = queryset.filter(params);
+        return queryset;
+    }
+
     getSelectedQueryset() {
         if(this.queryset === undefined) {
             return [];
         }
-        let queryset = this.queryset.copy();
+        let queryset = this.getfilteredQueryset().copy();
         if(!this.selectedAllPages) {
             queryset._queryParams = {'id__in': this.selection.selected.join(',')};
         }
