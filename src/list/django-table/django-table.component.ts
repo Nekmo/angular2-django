@@ -18,13 +18,16 @@ import {isString} from "util";
 import {FormControl, FormGroup} from "@angular/forms";
 import {SelectionModel} from '@angular/cdk/collections';
 
+export type SEARCH_TYPE = {filters: {}, searchTerm: string};
+
+const PARAMS = ['ordering', 'search', 'page', 'page_size'];
+
 @Directive({
     selector: '[djangoCellDef]',
 })
 export class DjangoCellDef  {
   constructor(/** @docs-private */ public template: TemplateRef<any>) { }
 }
-
 
 @Directive({
   selector: '[djangoColumnDef]',
@@ -285,6 +288,13 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
             }
         });
         let params = Object.assign({}, this.params);
+        // Si no es un parámetro conocido, entonces lo elimino, ya que seguramente sea un filtro.
+        // Sólo mantengo los filtros que hayan sido establecidos ahora
+        for (let key in params) {
+            if(PARAMS.indexOf(key) === -1) {
+                delete params[key];
+            }
+        }
         params = Object.assign(params, newParams);
         if(params['page_size'] && params['page_size'] == this.defaultPageIndex) {
             params['page_size'] = undefined;
@@ -294,6 +304,12 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
 
     setSearch(term) {
         this.setParam('search', term);
+    }
+
+    setAdvancedSearch(search: SEARCH_TYPE, page = null) {
+        let params = Object.assign({}, search.filters);
+        params['search'] = search.searchTerm;
+        this.setParams(params);
     }
 
     getRouterPage() {
@@ -318,6 +334,13 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
             params['search'] = undefined;
         }
         queryset = queryset.page(params['page'] || 1, params['page_size']);
+        // Todos los parámetros conocidos los borro para no incluirlos en filter
+        delete params['ordering'];
+        delete params['search'];
+        delete params['page'];
+        delete params['page_size'];
+        // Incluyo el resto de parámetros
+        queryset = queryset.filter(params);
         queryset[this.listMethod]().subscribe((items) => {
             this.items = items;
             this.itemsLength = items.count;
