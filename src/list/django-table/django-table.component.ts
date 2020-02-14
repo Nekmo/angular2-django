@@ -199,7 +199,9 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
     // Listen sort change event
     sortChangeListener() {
         this.sort.sortChange.subscribe(() => {
-            this.setParams({'ordering': (this.sort.direction == 'asc' ? '' : '-') + this.sort.active, 'page': 1});
+            this.setParams(
+                {'ordering': (this.sort.direction == 'asc' ? '' : '-') + this.sort.active, 'page': 1},
+                true);
         });
     }
 
@@ -211,7 +213,7 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
             if(pageIndex == 1) {
                 pageIndex = undefined;
             }
-            this.setParams({'page_size': ev.pageSize, 'page': pageIndex});
+            this.setParams({'page_size': ev.pageSize, 'page': pageIndex}, true);
         });
 
     }
@@ -281,7 +283,7 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
         this.setParams(data);
     }
 
-    setParams(newParams) {
+    setParams(newParams, append: boolean = false) {
         Object.keys(newParams).forEach((key) => {
             if(newParams[key] instanceof SerializerService) {
                 newParams[key] = newParams[key]['id'];
@@ -290,9 +292,11 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
         let params = Object.assign({}, this.params);
         // Si no es un parámetro conocido, entonces lo elimino, ya que seguramente sea un filtro.
         // Sólo mantengo los filtros que hayan sido establecidos ahora
-        for (let key in params) {
-            if(PARAMS.indexOf(key) === -1) {
-                delete params[key];
+        if(!append) {
+            for (let key in params) {
+                if(PARAMS.indexOf(key) === -1) {
+                    delete params[key];
+                }
             }
         }
         params = Object.assign(params, newParams);
