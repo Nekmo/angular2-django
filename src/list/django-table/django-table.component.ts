@@ -412,8 +412,10 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
             return [];
         }
         let queryset = this.getfilteredQueryset().copy();
+        queryset['count'] = this.itemsLength;
         if(!this.selectedAllPages) {
             queryset._queryParams = {'id__in': this.selection.selected.join(',')};
+            queryset['count'] = this.selection.selected.length;
         }
         return queryset;
     }

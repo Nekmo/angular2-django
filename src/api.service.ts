@@ -88,8 +88,16 @@ export class ApiService {
         return this.pipeHttp(this.http.patch(this.getUrlDetail(pk), data, this.defaultHttpOptions()));
     }
 
-    delete(pk) {
-        return this.http.delete(this.getUrlDetail(pk), this.defaultHttpOptions());
+    delete(pk = null) {
+        let url: string;
+        let options = this.defaultHttpOptions();
+        if(pk == null) {
+            url = this.getUrlList();
+            options['params'] = this._queryParams;
+        } else {
+            url = this.getUrlDetail(pk)
+        }
+        return this.http.delete(url, options);
     }
 
     defaultHttpOptions() {
