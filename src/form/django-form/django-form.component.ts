@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {FormBuilder, Validators, FormGroup} from "@angular/forms";
 import {isArray, isString} from "util";
 import {Observable} from "rxjs/Rx";
@@ -98,6 +98,8 @@ export class DjangoFormComponent implements OnInit, OnChanges {
     @Input() populate: {};
     @Input() translationsField: string = 'translations';
     @Input() translations: {name: string, code: string}[] = [];
+
+    @Output() onReset: EventEmitter<FormGroup> = new EventEmitter<FormGroup>();
 
     constructor(public formBuilder: FormBuilder,
                 public snackBar: MatSnackBar,
@@ -256,5 +258,6 @@ export class DjangoFormComponent implements OnInit, OnChanges {
 
     resetForm() {
         this.form.reset();
+        this.onReset.emit(this.form);
     }
 }
