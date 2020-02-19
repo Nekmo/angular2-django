@@ -361,7 +361,7 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
 
     isAllSelected() {
         const numSelected = this.selection.selected.length;
-        return numSelected === this.pageSize;
+        return numSelected === this.pageSize || numSelected >= this.itemsLength;
     }
 
     /** Selects all rows if they are not all selected; otherwise clear selection. */
