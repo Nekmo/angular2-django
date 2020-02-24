@@ -89,6 +89,7 @@ export class DjangoFormComponent implements OnInit, OnChanges {
 
     schema: any;
     form: FormGroup;
+    showSnackBar: boolean = true;
     @Input() api: any;
     @Input() instance: any;
     @Input() fields: any[] = [];
@@ -245,9 +246,11 @@ export class DjangoFormComponent implements OnInit, OnChanges {
                 return Observable.empty();
             }))
             .subscribe(() => {
-                this.snackBar.open('Success', 'Close', {
-                    duration: 3000,
-                });
+                if(this.showSnackBar) {
+                    this.snackBar.open('Success', 'Close', {
+                        duration: 3000,
+                    });
+                };
                 if(onSuccess) {
                     onSuccess();
                 } else {
