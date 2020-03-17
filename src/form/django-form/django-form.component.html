@@ -71,6 +71,7 @@
                                  [form]="form" formControlName="{{ input['field'] }}"></django-search-input>
             <dynamic-component [config]="{
                         component: input['config']['component'],
+                        extraData: input['config']['data'],
                         data: {formControl: form.controls[input['field']],
                                instance: instance, helpText: input['help_text'], placeholder: input['placeholder']}
                                }"

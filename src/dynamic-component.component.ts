@@ -13,6 +13,7 @@ import {
 export interface DynamicItem {
     component: any,
     data?: any,
+    extraData?: any,
 }
 
 
@@ -47,6 +48,10 @@ export class DynamicComponentComponent implements OnInit {
 
         Object.keys(this.config.data).forEach((key) => {
             (<any>componentRef.instance)[key] = this.config.data[key];
+        });
+
+        Object.keys(this.config.extraData || {}).forEach((key) => {
+            (<any>componentRef.instance)[key] = this.config.extraData[key];
         });
 
     }
