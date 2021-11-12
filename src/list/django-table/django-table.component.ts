@@ -347,7 +347,7 @@ export class DjangoTableComponent implements OnInit, OnChanges, AfterContentInit
         }
         let element: HTMLElement = event.toElement;
         return this.linkColumns.map((x) => `.mat-column-${x}`)
-            .find((x) => element.closest(x) !== null) !== undefined;
+            .find((x) => element && element.closest(x) !== null) !== undefined;
     }
 
     onRowClick(row, event) {
